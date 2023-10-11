@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wmy.study.DearIMProject;
+package com.wmy.study.DearIMProject.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

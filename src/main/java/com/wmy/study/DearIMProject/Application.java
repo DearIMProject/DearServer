@@ -1,13 +1,18 @@
 package com.wmy.study.DearIMProject;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DearImProjectApplication {
+@MapperScan("com.wmy.study.DearIMProject.dao")
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(DearImProjectApplication.class, args);
+        // 加载各种bean
+        SpringApplication.run(Application.class, args);
+
+
     }
 
 }
