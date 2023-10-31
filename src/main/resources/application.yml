@@ -17,8 +17,8 @@ mail:
     sender: wenmingyan1990@163.com
 
 application:
-  name: 快记账
-  magicNumber: 891013
+  name: 展信佳
+  magicNumber: 900523
 
 mybatis-plus:
   global-config:
