@@ -1,4 +1,4 @@
-package com.wmy.study.DearIMProject.nettyStudy;
+package com.wmy.study.DearIMProject.nettyStudy.helloworld;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;

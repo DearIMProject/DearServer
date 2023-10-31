@@ -54,7 +54,7 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("email", email);
         User one = getOne(wrapper);
-        if (one != null && one.getId() != 0) { // 之前已经注册过也需要返回true
+        if (one != null && one.getUserId() != 0) { // 之前已经注册过也需要返回true
             return true;
         }
 
@@ -86,14 +86,14 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
         User user = list.get(0);
 
         QueryWrapper<UserToken> tokenQueryWrapper = new QueryWrapper<>();
-        tokenQueryWrapper.eq("uid", user.getId());
+        tokenQueryWrapper.eq("uid", user.getUserId());
         tokenQueryWrapper.lt("expire_time", new Date().getTime());
         List<UserToken> userTokenList = userTokenService.list(tokenQueryWrapper);
         if (userTokenList.size() > 5) {
             throw new BusinessException(ErrorCode.ERROR_CODE_USER_OVER_TOKEN, "超过5台设备登录该账号！");
         }
         UserToken loginUserToken = new UserToken();
-        loginUserToken.setUid(user.getId());
+        loginUserToken.setUid(user.getUserId());
         //  生成token
         String token = userTokenService.getToken(user.getEmail());
         loginUserToken.setToken(token);

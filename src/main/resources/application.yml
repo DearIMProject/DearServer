@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://47.99.103.133:3306/bookkeeping?useSSL=false
-    username: admin
-    password: wenmingyan
+    username: root
+    password: root
   mail:
     host: smtp.163.com
     username: wenmingyan1990@163.com
@@ -18,7 +18,7 @@ mail:
 
 application:
   name: 展信佳
-  magicNumber: 900523
+  magicNumber: 891013
 
 mybatis-plus:
   global-config:

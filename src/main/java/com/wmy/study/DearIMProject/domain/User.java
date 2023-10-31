@@ -22,7 +22,7 @@ public class User {
     private String username;
 
     @TableId("userId")
-    private long id;
+    private long userId;
 
     private String email;
     private String password;

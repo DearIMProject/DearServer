@@ -1,4 +1,4 @@
-package com.wmy.study.DearIMProject.nettyStudy;
+package com.wmy.study.DearIMProject.nettyStudy.echo;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
