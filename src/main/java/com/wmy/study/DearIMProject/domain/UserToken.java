@@ -10,5 +10,7 @@ public class UserToken {
     private long uid;
     private String token;
     private long expireTime;
-    @TableId private long id;
+    @TableId
+    private long id;
+    private int isExpire;
 }

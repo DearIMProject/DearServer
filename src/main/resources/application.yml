@@ -2,10 +2,11 @@ server:
   port: 8888
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.99.103.133:3306/bookkeeping?useSSL=false
-    username: root
-    password: root
+    username:
+    password:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:/Users/apple/Developer/DearIM/IM/DearData/database.db
+  
   mail:
     host: smtp.163.com
     username: wenmingyan1990@163.com

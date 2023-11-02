@@ -7,17 +7,17 @@ import java.security.NoSuchAlgorithmException;
 public class MD5Utils {
 
     static final char hexDigits[] = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     };
     static final char hexDigitsLower[] = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
 
     /**
      * 对字符串 MD5 无盐值加密
      *
      * @param plainText 传入要加密的字符串
-     * @return MD5加密后生成32位(小写字母+数字)字符串
+     * @return MD5加密后生成32位(小写字母 + 数字)字符串
      */
     public static String MD5Lower(String plainText) {
         try {
@@ -40,11 +40,11 @@ public class MD5Utils {
      * 对字符串 MD5 加密
      *
      * @param plainText 传入要加密的字符串
-     * @return MD5加密后生成32位(大写字母+数字)字符串
+     * @return MD5加密后生成32位(大写字母 + 数字)字符串
      */
     public static String MD5Upper(String plainText) {
         try {
-            // 获得MD5摘要算法的 MessageDigest 对象
+            // 获得MD5摘要算法的 MessageDigest 对象u
             MessageDigest md = MessageDigest.getInstance("MD5");
 
             // 使用指定的字节更新摘要
@@ -73,7 +73,7 @@ public class MD5Utils {
      *
      * @param plainText 传入要加密的字符串
      * @param saltValue 传入要加的盐值
-     * @return MD5加密后生成32位(小写字母+数字)字符串
+     * @return MD5加密后生成32位(小写字母 + 数字)字符串
      */
     public static String MD5Lower(String plainText, String saltValue) {
         try {
@@ -98,7 +98,7 @@ public class MD5Utils {
      *
      * @param plainText 传入要加密的字符串
      * @param saltValue 传入要加的盐值
-     * @return MD5加密后生成32位(大写字母+数字)字符串
+     * @return MD5加密后生成32位(大写字母 + 数字)字符串
      */
     public static String MD5Upper(String plainText, String saltValue) {
         try {
@@ -127,7 +127,9 @@ public class MD5Utils {
         }
     }
 
-    /** MD5加密后生成32位(小写字母+数字)字符串 同 MD5Lower() 一样 */
+    /**
+     * MD5加密后生成32位(小写字母+数字)字符串 同 MD5Lower() 一样
+     */
     public static final String MD5(String plainText) {
         try {
             MessageDigest mdTemp = MessageDigest.getInstance("MD5");
@@ -153,7 +155,7 @@ public class MD5Utils {
      * 校验MD5码
      *
      * @param text 要校验的字符串
-     * @param md5 md5值
+     * @param md5  md5值
      * @return 校验结果
      */
     public static boolean valid(String text, String md5) {

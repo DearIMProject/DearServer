@@ -2,6 +2,7 @@ package com.wmy.study.DearIMProject.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.wmy.study.DearIMProject.Exception.BusinessException;
 import com.wmy.study.DearIMProject.domain.*;
 import com.wmy.study.DearIMProject.service.IEmailService;
@@ -39,7 +40,7 @@ public class UserController {
      * @param email           邮箱
      * @param password        密码
      * @param confirmPassword 确认密码
-     * @return
+     * @return 返回成功或者失败
      */
     @PostMapping("/register")
     @ResponseBody
@@ -67,11 +68,40 @@ public class UserController {
     }
 
     /**
+     * 注销用户
+     *
+     * @param token 用户登录token
+     * @return 注销成功
+     */
+    @PostMapping("/unregister")
+    @ResponseBody
+    public ResponseBean unregister(String token) {
+        log.debug("/user/unregister");
+        QueryWrapper<UserToken> wrapper = new QueryWrapper<>();
+        wrapper.eq("token", token);
+        UserToken userToken = userTokenService.getOne(wrapper);
+        if (userToken != null && userToken.getUid() != 0) {
+            User user = userService.getById(userToken.getUid());
+            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+            user.setStatus(2);
+            updateWrapper.setEntity(user);
+            boolean updated = userService.update(updateWrapper);
+            if (updated) {
+                return new ResponseBean(true, null);
+            } else {
+                return new ResponseBean(false, ErrorCode.ERROR_CODE_PARAM, "注销失败！");
+            }
+        } else {
+            return new ResponseBean(false, ErrorCode.ERROR_CODE_USER_NOT_FOUND, "用户找不到！");
+        }
+    }
+
+    /**
      * 判断验证码是否一致
      *
      * @param email 邮箱
      * @param code  验证码
-     * @return
+     * @return 返回是否一致
      */
     @PostMapping("/checkCode")
     @ResponseBody
@@ -88,7 +118,7 @@ public class UserController {
      *
      * @param email    邮箱
      * @param password 密码
-     * @return
+     * @return 返回登录成功或者失败
      */
     @PostMapping("/login")
     @ResponseBody
@@ -187,5 +217,27 @@ public class UserController {
         HashMap<String, Object> map = new HashMap<>();
         map.put("user", user);
         return new ResponseBean(true, map);
+    }
+
+    /**
+     * 登出逻辑
+     *
+     * @param token 用户token
+     * @return 登出成功或失败
+     */
+    public ResponseBean logout(String token) {
+        QueryWrapper<UserToken> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("token", token);
+        UserToken userToken = userTokenService.getOne(queryWrapper);
+        if (userToken != null) {
+            userToken.setIsExpire(1);
+            UpdateWrapper<UserToken> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setEntity(userToken);
+            boolean updated = userTokenService.update(updateWrapper);
+            if (updated) {
+                return new ResponseBean(true, null);
+            }
+        }
+        return new ResponseBean(false, null);
     }
 }
