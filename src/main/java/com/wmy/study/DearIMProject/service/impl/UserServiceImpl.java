@@ -33,13 +33,13 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
 
     public boolean register(String email, String password, String confirmPwd)
             throws BusinessException {
-        if (email == null || email.length() == 0) {
+        if (email == null || email.isEmpty()) {
             throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "empty email!");
         }
-        if (password == null || password.length() == 0) {
+        if (password == null || password.isEmpty()) {
             throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "empty password!");
         }
-        if (confirmPwd == null || confirmPwd.length() == 0) {
+        if (confirmPwd == null || confirmPwd.isEmpty()) {
             throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "empty confirmPassword!");
         }
         if (!password.equals(confirmPwd)) {
@@ -70,24 +70,34 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
 
     @Override
     public String login(String email, String password) throws BusinessException {
-        if (email == null || email.length() == 0 || password == null || password.length() == 0) {
+        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
             throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "email or password is empty");
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
         queryWrapper.eq("email", email);
-        queryWrapper.eq("password", MD5Utils.MD5Upper(password, magicNumber));
+
         List<User> list = list(queryWrapper);
 
-        log.debug("用户是否已注册");
-        if (list == null || list.size() == 0 || list.size() == 1 && list.get(0).getStatus() == 0) {
+        log.debug("1. 判断用户是否已注册");
+
+        if (list == null || list.isEmpty()) {
             throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "用户暂未成功注册");
         }
-        log.debug("用户userToken是否超过5个");
         User user = list.get(0);
+        if (user.getStatus() == 0) {
+            throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "请登录邮箱验证信息！");
+        }
+//        queryWrapper.eq("password", MD5Utils.MD5Upper(password, magicNumber));
+        if (!user.getPassword().equals(MD5Utils.MD5Upper(password, magicNumber))) {
+            throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "用户名或密码错误！");
+        }
+
+        log.debug("2. 用户userToken是否超过5个");
+
 
         QueryWrapper<UserToken> tokenQueryWrapper = new QueryWrapper<>();
         tokenQueryWrapper.eq("uid", user.getUserId());
-        tokenQueryWrapper.lt("expire_time", new Date().getTime());
+        tokenQueryWrapper.gt("expire_time", new Date().getTime());
         List<UserToken> userTokenList = userTokenService.list(tokenQueryWrapper);
         if (userTokenList.size() > 5) {
             throw new BusinessException(ErrorCode.ERROR_CODE_USER_OVER_TOKEN, "超过5台设备登录该账号！");
@@ -97,7 +107,7 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
         //  生成token
         String token = userTokenService.getToken(user.getEmail());
         loginUserToken.setToken(token);
-        loginUserToken.setExpireTime(new Date().getTime() + 30 * 24 * 60 * 60 * 1000); // 30天
+        loginUserToken.setExpireTime(new Date().getTime() + 30L * 24 * 60 * 60 * 1000); // 30天
         boolean save = userTokenService.save(loginUserToken);
         if (!save) {
             return "";
@@ -108,10 +118,11 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
     @Override
     public String autoLogin(String token) throws BusinessException {
 
-        if (token == null || token.length() == 0) {
+        if (token == null || token.isEmpty()) {
             throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "token 为空");
         }
         String newToken = userTokenService.checkAndRefreshToken(token);
+        log.debug(newToken);
         return newToken;
     }
 

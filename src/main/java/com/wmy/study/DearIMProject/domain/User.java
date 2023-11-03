@@ -1,5 +1,6 @@
 package com.wmy.study.DearIMProject.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -21,8 +22,8 @@ public class User {
 
     private String username;
 
-    @TableId("userId")
-    private long userId;
+    @TableId(value = "userId", type = IdType.AUTO)
+    private Long userId;
 
     private String email;
     private String password;

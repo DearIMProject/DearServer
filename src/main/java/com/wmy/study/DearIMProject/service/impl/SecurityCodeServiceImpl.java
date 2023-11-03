@@ -17,8 +17,10 @@ import java.util.Date;
 @Service
 public class SecurityCodeServiceImpl extends ServiceImpl<ISecurityCodeDao, SecurityCode>
         implements ISecurityCodeService {
-    @Autowired private ISecurityCodeDao codeDao;
-    @Autowired private IUserService userService;
+    @Autowired
+    private ISecurityCodeDao codeDao;
+    @Autowired
+    private IUserService userService;
 
     @Override
     public SecurityCode generateSecurityCode(String uniKey) {
@@ -51,7 +53,7 @@ public class SecurityCodeServiceImpl extends ServiceImpl<ISecurityCodeDao, Secur
         if (one != null) {
             // 不为空时
             log.debug("one 被删除");
-            removeById(one.getId());
+            removeById(one.getCodeId());
         }
         SecurityCode securityCode = generateSecurityCode(code.getUniKey());
 
@@ -78,7 +80,7 @@ public class SecurityCodeServiceImpl extends ServiceImpl<ISecurityCodeDao, Secur
         if (one != null
                 && one.getExpireTime() > new Date().getTime() // 未过期
                 && one.getCode().equals(code)) {
-            removeById(one.getId());
+            removeById(one.getCodeId());
             // 若为注册验证码
             QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
             userQueryWrapper.eq("email", email);
@@ -102,7 +104,7 @@ public class SecurityCodeServiceImpl extends ServiceImpl<ISecurityCodeDao, Secur
         SecurityCode securityCode = getOne(queryWrapper);
         if (securityCode != null) {
             // 已经有发过code 需要刷新
-            removeById(securityCode.getId());
+            removeById(securityCode.getCodeId());
         }
         SecurityCode newSecurityCode = generateSecurityCode(email);
         return newSecurityCode;

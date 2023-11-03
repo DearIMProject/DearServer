@@ -126,6 +126,7 @@ public class UserController {
         log.debug("email = " + email);
         log.debug("password = " + password);
         String token = userService.login(email, password);
+
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("email", email);
         User user = userService.getOne(wrapper);
@@ -134,6 +135,7 @@ public class UserController {
         tokenQueryWrapper.eq("token", token);
         UserToken one = userTokenService.getOne(tokenQueryWrapper);
         user.setExpireTime(one.getExpireTime());
+
         if (token != null) {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("user", user);

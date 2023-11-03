@@ -22,7 +22,7 @@ public class UserTokenServiceImpl extends ServiceImpl<IUserTokenDao, UserToken>
         queryWrapper.eq("token", token);
         UserToken userToken = getOne(queryWrapper);
         if (userToken == null) {
-            throw new BusinessException(ErrorCode.ERROR_CODE_TOKEN_EXPIRE, "token已失效");
+            throw new BusinessException(ErrorCode.ERROR_CODE_TOKEN_EXPIRE, "token找不到");
         }
         if (userToken.getExpireTime() + 5 * 24 * 60 * 60 * 1000
                 > new Date().getTime()) { // 5天换新的token
@@ -30,14 +30,15 @@ public class UserTokenServiceImpl extends ServiceImpl<IUserTokenDao, UserToken>
             String newToken = getToken(userToken.getToken());
             userToken.setToken(newToken);
             QueryWrapper<UserToken> updateQuery = new QueryWrapper<>();
-            updateQuery.eq("id", userToken.getId());
+            updateQuery.eq("id", userToken.getTokenId());
             boolean update = update(userToken, updateQuery);
             if (update) {
                 return newToken;
             }
         }
         if (userToken.getExpireTime() < new Date().getTime()) { // 已过期
-            removeById(userToken.getId());
+            removeById(userToken.getTokenId());
+            // TODO: wmy 这里要换一个新的token
             throw new BusinessException(ErrorCode.ERROR_CODE_TOKEN_EXPIRE, "token已失效");
         }
         return null;
@@ -54,18 +55,19 @@ public class UserTokenServiceImpl extends ServiceImpl<IUserTokenDao, UserToken>
 
     @Override
     public List<UserToken> getUserTokens(String email) throws BusinessException {
-        if (email == null || email.length() == 0) {
+        if (email == null || email.isEmpty()) {
             throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "email 为空");
         }
         QueryWrapper<UserToken> wrapper = new QueryWrapper<>();
         List<UserToken> list = list(wrapper);
+//        log.debug(list);
         return list;
     }
 
     @Override
     public boolean logout(String token) throws BusinessException {
 
-        if (token == null || token.length() == 0) {
+        if (token == null || token.isEmpty()) {
             throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "token 为空");
         }
 
@@ -73,7 +75,7 @@ public class UserTokenServiceImpl extends ServiceImpl<IUserTokenDao, UserToken>
         queryWrapper.eq("token", token);
         UserToken userToken = getOne(queryWrapper);
         if (userToken != null) {
-            boolean remove = removeById(userToken.getId());
+            boolean remove = removeById(userToken.getTokenId());
             return remove;
         }
         return false;
