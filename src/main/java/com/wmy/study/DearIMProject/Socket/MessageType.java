@@ -1,4 +1,4 @@
-package com.wmy.study.DearIMProject.nettyStudy.protocol;
+package com.wmy.study.DearIMProject.Socket;
 
 public enum MessageType {
 

@@ -1,0 +1,6 @@
+netty:
+  boss: 4
+  worker: 2
+  port: 9999
+#  portSalve: 18026
+#  host: 127.0.0.1

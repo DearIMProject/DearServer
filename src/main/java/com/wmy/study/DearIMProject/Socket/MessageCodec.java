@@ -1,5 +1,6 @@
-package com.wmy.study.DearIMProject.nettyStudy.protocol;
+package com.wmy.study.DearIMProject.Socket;
 
+import com.wmy.study.DearIMProject.Socket.Message;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
@@ -73,7 +74,7 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         long messageId = in.readLong();
         message.setMsgId(messageId);
         // 消息类型
-        int messageType = in.readByte();
+        int messageType = in.readInt();
         message.setMessageType(MessageType.fromInt(messageType));
         // 时间戳
         long timestamp = in.readLong();
@@ -88,7 +89,7 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         message.setToId(toId);
         message.setToEntity(MessageEntityType.fromInt(in.readByte()));
         // 获取内容字节数组
-        int length = in.readByte();
+        int length = in.readInt();
         byte[] contentByte = new byte[length];
         in.readBytes(contentByte, 0, length);
 

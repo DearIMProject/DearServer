@@ -1,5 +1,7 @@
 server:
   port: 8888
+
+
 spring:
   datasource:
     username:
@@ -29,3 +31,4 @@ mybatis-plus:
 logging:
   level:
     com.wmy.study.DearIMProject: debug
+
