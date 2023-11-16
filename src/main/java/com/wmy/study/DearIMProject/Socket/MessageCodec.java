@@ -1,14 +1,20 @@
 package com.wmy.study.DearIMProject.Socket;
 
 import com.wmy.study.DearIMProject.Socket.Message;
+import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
 import com.wmy.study.DearIMProject.Utils.ByteBufferUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
+import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.logging.LoggingHandler;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,12 +27,15 @@ import java.util.List;
 import static java.lang.System.out;
 
 @Slf4j
-public class MessageCodec extends ByteToMessageCodec<Message> {
+@ChannelHandler.Sharable
+public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
+    @Value("${application.magicNumber}")
     final int MAGIC_NUMBER = 891013;
     final int VERSION = 1;
 
     @Override
-    protected void encode(ChannelHandlerContext channelHandlerContext, Message message, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext channelHandlerContext, Message message, List<Object> list) throws Exception {
+        ByteBuf out = channelHandlerContext.alloc().buffer();
         // 魔数
         out.writeInt(MAGIC_NUMBER);
         // 版本号
@@ -51,6 +60,7 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         out.writeInt(bytes.length);
         // 写入消息内容
         out.writeBytes(bytes);
+        list.add(out);
         //TODO: wmy 添加加密算法
     }
 
@@ -72,12 +82,12 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         if (serialize != ProtocolSerializeType.JSON.ordinal()) {
             throw new Exception(" message serialize type is valid");
         }
-        Message message = new Message();
         // 消息id
         long messageId = in.readLong();
-        message.setMsgId(messageId);
         // 消息类型
         int messageType = in.readInt();
+        Message message = MessageFactory.factoryWithMessageType(MessageType.fromInt(messageType));
+        message.setMsgId(messageId);
         message.setMessageType(MessageType.fromInt(messageType));
         // 时间戳
         long timestamp = in.readLong();

@@ -4,7 +4,7 @@ import lombok.Data;
 
 
 @Data
-public class Message {
+public abstract class Message {
     /*消息id*/
     private long msgId;
     private long fromId;

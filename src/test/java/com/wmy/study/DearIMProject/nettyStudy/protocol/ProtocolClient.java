@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProtocolClient {
     public static void main(String[] args) {
         NioEventLoopGroup worker = new NioEventLoopGroup();
-        Session.MessageCodec codec = new Session.MessageCodec();
+//        Session.MessageCodec codec = new Session.MessageCodec();
         ChannelFuture future = new Bootstrap()
                 .group(worker)
                 .channel(NioSocketChannel.class)
@@ -22,7 +22,7 @@ public class ProtocolClient {
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
                         nioSocketChannel.pipeline().addLast(new LoggingHandler());
 //                        nioSocketChannel.pipeline().addLast(new LengthFieldBasedFrameDecoder(1024, 0, 4, 0, 0));
-                        nioSocketChannel.pipeline().addLast(codec);
+//                        nioSocketChannel.pipeline().addLast(codec);
                         nioSocketChannel.pipeline().addLast(new ChannelInboundHandlerAdapter() {
                             @Override
                             public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -37,15 +37,15 @@ public class ProtocolClient {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
 
-                Session.Message message = new Session.Message();
-                message.setMsgId(123);
-                message.setMessageType(Session.MessageType.TEXT);
-                message.setContent("一个消息体");
-                message.setTimestamp(System.currentTimeMillis());
-                message.setFromEntity(Session.MessageEntityType.USER);
-                message.setFromId(1);
-                message.setToEntity(Session.MessageEntityType.USER);
-                message.setToId(2);
+//                Session.Message message = new Session.Message();
+//                message.setMsgId(123);
+//                message.setMessageType(Session.MessageType.TEXT);
+//                message.setContent("一个消息体");
+//                message.setTimestamp(System.currentTimeMillis());
+//                message.setFromEntity(Session.MessageEntityType.USER);
+//                message.setFromId(1);
+//                message.setToEntity(Session.MessageEntityType.USER);
+//                message.setToId(2);
                 ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer();
                 System.out.println(buffer);
                 log.debug("{}", buffer);
