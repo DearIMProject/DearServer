@@ -22,22 +22,26 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
         pipeline.addLast(new LoggingHandler(LogLevel.INFO));
-        // 添加自己的处理器
         pipeline.addLast(new MessageCodec());
-        pipeline.addLast(new SocketHandler());
+        pipeline.addLast(new ChannelInboundHandlerAdapter() {
+            @Override
+            public void channelActive(ChannelHandlerContext ctx) throws Exception {
+                //TODO: wmy 连接建立之后需要把channel和user绑定
+                new Thread(() -> {
 
-        //TODO: wmy test
-//        pipeline.addLast(new StringEncoder());
-//        pipeline.addLast(new StringDecoder());
-//        pipeline.addLast(new ChannelInboundHandlerAdapter() {
-//            @Override
-//            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-//                ByteBuf buf = (ByteBuf) msg;
+                }).start();
+                super.channelActive(ctx);
+            }
 
-//                log.debug("收到消息：" + msg.toString());
-
-//            }
-//        });
+            @Override
+            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+                Message message = (Message) msg;
+                //TODO: wmy echo
+                ctx.writeAndFlush(message);
+                super.channelRead(ctx, msg);
+            }
+        })
+        ;
 
 
     }

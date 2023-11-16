@@ -1,21 +1,26 @@
 package com.wmy.study.DearIMProject.Socket;
 
 import com.wmy.study.DearIMProject.Socket.Message;
+import com.wmy.study.DearIMProject.Utils.ByteBufferUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
+import io.netty.handler.logging.LoggingHandler;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static java.lang.System.out;
 
-
+@Slf4j
 public class MessageCodec extends ByteToMessageCodec<Message> {
     final int MAGIC_NUMBER = 891013;
     final int VERSION = 1;
@@ -31,7 +36,7 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         // 消息id
         out.writeLong(message.getMsgId());
         // 消息类型
-        out.writeByte(message.getMessageType().ordinal());
+        out.writeInt(message.getMessageType().ordinal());
         // 时间戳
         out.writeLong(message.getTimestamp());
         // 发送方
@@ -41,12 +46,9 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         out.writeLong(message.getToId());
         out.writeByte(message.getToEntity().ordinal());
         // 获取内容字节数组
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(message.getContent());
-        byte[] bytes = bos.toByteArray();
+        byte[] bytes = message.getContent().getBytes();
         // 长度
-        out.writeByte(bytes.length);
+        out.writeInt(bytes.length);
         // 写入消息内容
         out.writeBytes(bytes);
         //TODO: wmy 添加加密算法
@@ -65,6 +67,7 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         if (version > VERSION) {
             throw new Exception(" message version is valid");
         }
+        // 序列化
         int serialize = in.readByte();
         if (serialize != ProtocolSerializeType.JSON.ordinal()) {
             throw new Exception(" message serialize type is valid");
@@ -92,11 +95,9 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         int length = in.readInt();
         byte[] contentByte = new byte[length];
         in.readBytes(contentByte, 0, length);
-
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(contentByte));
-        // 消息内容
-        message.setContent(ois.readObject().toString());
-        System.out.println(message.toString());
+        String content = new String(contentByte, StandardCharsets.UTF_8);
+        message.setContent(content);
+        log.debug(message.toString());
         list.add(message);
 
     }
