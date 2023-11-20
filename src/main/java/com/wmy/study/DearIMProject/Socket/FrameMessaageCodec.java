@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 
 public class FrameMessaageCodec extends LengthFieldBasedFrameDecoder {
     public FrameMessaageCodec() {
-        super(1024, 0, 0, 0, 0);
+        super(1024, 0, 4, 0, 0);
     }
 
     public FrameMessaageCodec(ByteOrder byteOrder, int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment, int initialBytesToStrip, boolean failFast) {

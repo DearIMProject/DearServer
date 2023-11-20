@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     @Resource
     private LoginRequestHandler LOGIN_REQUESR_HANDLER;
-
+    private FrameMessaageCodec FRAME_CODEC = new FrameMessaageCodec();
     private MessageCodec MESSAGE_CODEC = new MessageCodec();
     LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
 
@@ -30,16 +30,16 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
         pipeline.addLast(LOGGING_HANDLER);
+//        pipeline.addLast(FRAME_CODEC);
         pipeline.addLast(MESSAGE_CODEC);
         pipeline.addLast(LOGIN_REQUESR_HANDLER);
-        //TODO: wmy 创建一个LoginRequestMessage进行处理
 
-        pipeline.addLast(new ChannelInboundHandlerAdapter() {
-            @Override
-            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-                ctx.writeAndFlush(msg);
-                super.channelRead(ctx, msg);
-            }
-        });
+
+//        pipeline.addLast(new ChannelInboundHandlerAdapter() {
+//            @Override
+//            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {//                ctx.writeAndFlush(msg);
+//                super.channelRead(ctx, msg);
+//            }
+//        });
     }
 }

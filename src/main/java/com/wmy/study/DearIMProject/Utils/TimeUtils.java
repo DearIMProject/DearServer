@@ -5,7 +5,8 @@ import java.util.Date;
 
 public class TimeUtils {
     public static boolean isExpire(long time) {
-        return new Date().getTime() < time;
+        long nowTime = new Date().getTime();
+        return nowTime >= time;
     }
 
     /**

@@ -151,12 +151,13 @@ public class UserController {
      * @return bean
      * @throws BusinessException
      */
-    @RequestMapping("/autoLogin")
+    @RequestMapping("/autologin")
     @ResponseBody
     public ResponseBean autoLogin(String token) throws BusinessException {
         String resultToken = userService.autoLogin(token);
         if (resultToken != null) {
             QueryWrapper<UserToken> wrapper = new QueryWrapper<>();
+            wrapper.eq("token", token);
             UserToken userToken = userTokenService.getOne(wrapper);
             User user = userService.getById(userToken.getUid());
             user.setToken(resultToken);
@@ -227,18 +228,13 @@ public class UserController {
      * @param token 用户token
      * @return 登出成功或失败
      */
-    public ResponseBean logout(String token) {
-        QueryWrapper<UserToken> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("token", token);
-        UserToken userToken = userTokenService.getOne(queryWrapper);
-        if (userToken != null) {
-            userToken.setIsExpire(1);
-            UpdateWrapper<UserToken> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setEntity(userToken);
-            boolean updated = userTokenService.update(updateWrapper);
-            if (updated) {
-                return new ResponseBean(true, null);
-            }
+    @ResponseBody
+    @RequestMapping("/logout")
+    public ResponseBean logout(String token) throws BusinessException {
+        boolean isLogout = userTokenService.logout(token);
+
+        if (isLogout) {
+            return new ResponseBean(true, null);
         }
         return new ResponseBean(false, null);
     }

@@ -31,7 +31,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (userToken == null || TimeUtils.isExpire(userToken.getExpireTime())) {
             throw new BusinessException(ErrorCode.ERROR_CODE_TOKEN_EXPIRE, "token 不存在或已过期");
         }
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             Object handler,
             ModelAndView modelAndView)
             throws Exception {
-        log.info("LoginInterceptor postHandle");
+        log.info("------ LoginInterceptor postHandle ------");
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
@@ -49,7 +49,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public void afterCompletion(
             HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
-        log.info("LoginInterceptor afterCompletion");
+        log.info("------ LoginInterceptor afterCompletion ------");
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 }

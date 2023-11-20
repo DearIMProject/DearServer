@@ -25,7 +25,7 @@ public class UserTokenServiceImpl extends ServiceImpl<IUserTokenDao, UserToken>
             throw new BusinessException(ErrorCode.ERROR_CODE_TOKEN_EXPIRE, "token找不到");
         }
         if (userToken.getExpireTime() + 5 * 24 * 60 * 60 * 1000
-                > new Date().getTime()) { // 5天换新的token
+                < new Date().getTime()) { // 5天换新的token
             // 换新的token
             String newToken = getToken(userToken.getToken());
             userToken.setToken(newToken);
@@ -41,7 +41,7 @@ public class UserTokenServiceImpl extends ServiceImpl<IUserTokenDao, UserToken>
             // TODO: wmy 这里要换一个新的token
             throw new BusinessException(ErrorCode.ERROR_CODE_TOKEN_EXPIRE, "token已失效");
         }
-        return null;
+        return token;
     }
 
     @Override
