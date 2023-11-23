@@ -7,6 +7,8 @@ import com.wmy.study.DearIMProject.Socket.MessageType;
 import com.wmy.study.DearIMProject.Socket.UserTokenChannel;
 import com.wmy.study.DearIMProject.Socket.message.LoginRequestMessage;
 import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
+import com.wmy.study.DearIMProject.dao.IMessageDao;
+import com.wmy.study.DearIMProject.dao.IUserDao;
 import com.wmy.study.DearIMProject.domain.UserToken;
 import com.wmy.study.DearIMProject.service.IUserService;
 import com.wmy.study.DearIMProject.service.IUserTokenService;
@@ -31,7 +33,8 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
     private UserTokenChannel tokenChannel;
     @Value("${application.magicNumber}")
     private int magicNumber;
-
+    @Resource
+    private IMessageDao messageDao;
 
     private static LoginRequestHandler loginRequestHandler;
 

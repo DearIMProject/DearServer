@@ -1,18 +1,24 @@
 package com.wmy.study.DearIMProject.Socket;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 
 @Data
+@TableName("tb_message")
 public abstract class Message {
     /*消息id*/
-    private long msgId;
-    private long fromId;
+    @TableId(value = "msgId", type = IdType.AUTO)
+    private Long msgId;
+
+    private Long fromId;
     private MessageEntityType fromEntity;
-    private long toId;
+    private Long toId;
     private MessageEntityType toEntity;
     /*消息内容*/
     private String content;
     private MessageType messageType;
-    private long timestamp;
+    private Long timestamp;
 }

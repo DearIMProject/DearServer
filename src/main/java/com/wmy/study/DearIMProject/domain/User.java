@@ -30,15 +30,15 @@ public class User {
     /**
      * 账户状态 0: 未注册; 1: 已注册; 2: 已注销
      */
-    private int status;
+    private Integer status;
     /**
      * 0 不是VIP 1 充值过VIP
      */
-    private int vipStatus;
+    private Integer vipStatus;
     /**
      * vip过期时间`
      */
-    private long vipExpired;
+    private Integer vipExpired;
     /**
      * 机型
      */
@@ -46,7 +46,7 @@ public class User {
     /**
      * 注册时间
      */
-    private long registerTime;
+    private Long registerTime;
 
     public String getUsername() {
         if (username == null || username.isEmpty()) {

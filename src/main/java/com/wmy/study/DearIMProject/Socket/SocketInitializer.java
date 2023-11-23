@@ -1,6 +1,7 @@
 package com.wmy.study.DearIMProject.Socket;
 
 import com.wmy.study.DearIMProject.Socket.handler.LoginRequestHandler;
+import com.wmy.study.DearIMProject.Socket.handler.SingleChatHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -22,18 +23,20 @@ import org.springframework.stereotype.Component;
 public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     @Resource
     private LoginRequestHandler LOGIN_REQUESR_HANDLER;
-    private FrameMessaageCodec FRAME_CODEC = new FrameMessaageCodec();
-    private MessageCodec MESSAGE_CODEC = new MessageCodec();
+    //    private FrameMessaageCodec FRAME_CODEC = new FrameMessaageCodec();
+    @Resource
+    private MessageCodec MESSAGE_CODEC;
     LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
+    @Resource
+    private SingleChatHandler CHAT_HANDLER;
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
         pipeline.addLast(LOGGING_HANDLER);
-//        pipeline.addLast(FRAME_CODEC);
         pipeline.addLast(MESSAGE_CODEC);
         pipeline.addLast(LOGIN_REQUESR_HANDLER);
-
+        pipeline.addLast(CHAT_HANDLER);
 
 //        pipeline.addLast(new ChannelInboundHandlerAdapter() {
 //            @Override

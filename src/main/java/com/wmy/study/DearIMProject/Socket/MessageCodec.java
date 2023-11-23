@@ -3,6 +3,8 @@ package com.wmy.study.DearIMProject.Socket;
 import com.wmy.study.DearIMProject.Socket.Message;
 import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
 import com.wmy.study.DearIMProject.Utils.ByteBufferUtil;
+import com.wmy.study.DearIMProject.dao.IMessageDao;
+import com.wmy.study.DearIMProject.service.IMessageService;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;
@@ -12,6 +14,7 @@ import io.netty.handler.codec.ByteToMessageCodec;
 import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.logging.LoggingHandler;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,11 +30,23 @@ import java.util.List;
 import static java.lang.System.out;
 
 @Slf4j
+@Component
 @ChannelHandler.Sharable
 public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
     @Value("${application.magicNumber}")
     final int MAGIC_NUMBER = 891013;
     final int VERSION = 1;
+    @Resource
+    private IMessageService messageService;
+    private MessageCodec messageCodec;
+
+    public MessageCodec() {
+    }
+
+    @PostConstruct
+    public void init() {
+        messageCodec = this;
+    }
 
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Message message, List<Object> list) throws Exception {
@@ -108,7 +123,11 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
         String content = new String(contentByte, StandardCharsets.UTF_8);
         message.setContent(content);
         log.debug(message.toString());
+        // 添加到数据库中
+        if (message.getMessageType() != MessageType.REQUEST_LOGIN) {
+            message.setMsgId(null);
+            messageService.save(message);
+        }
         list.add(message);
-
     }
 }

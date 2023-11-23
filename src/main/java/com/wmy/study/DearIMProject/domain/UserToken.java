@@ -13,5 +13,5 @@ public class UserToken {
     private Long uid;
     private String token;
     private Long expireTime;
-    private int isExpire;
+    private Integer isExpire;
 }

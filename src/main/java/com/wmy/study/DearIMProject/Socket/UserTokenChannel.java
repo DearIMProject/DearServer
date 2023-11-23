@@ -42,4 +42,8 @@ public class UserTokenChannel {
         }
         tokenChannelMap.put(token, channel);
     }
+
+    public Channel getChannel(String token) {
+        return tokenChannelMap.get(token);
+    }
 }
