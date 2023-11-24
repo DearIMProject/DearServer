@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     @Resource
     private LoginRequestHandler LOGIN_REQUESR_HANDLER;
-    //    private FrameMessaageCodec FRAME_CODEC = new FrameMessaageCodec();
+
     @Resource
     private MessageCodec MESSAGE_CODEC;
     LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
@@ -33,6 +33,7 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
+        pipeline.addLast(new FrameMessaageCodec());
         pipeline.addLast(LOGGING_HANDLER);
         pipeline.addLast(MESSAGE_CODEC);
         pipeline.addLast(LOGIN_REQUESR_HANDLER);

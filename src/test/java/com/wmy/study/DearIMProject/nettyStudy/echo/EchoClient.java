@@ -6,6 +6,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +22,7 @@ public class EchoClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        socketChannel.pipeline().addLast(new LoggingHandler());
+                        socketChannel.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
                         socketChannel.pipeline().addLast(new StringEncoder());
                         socketChannel.pipeline().addLast(new ChannelInboundHandlerAdapter() {
                             @Override

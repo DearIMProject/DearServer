@@ -40,7 +40,12 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         for (UserToken userToken : list) {
             String token = userToken.getToken();
             Channel channel = userTokenChannel.getChannel(token);
-            channel.writeAndFlush(chatMessage);
+            if (channel != null) {
+                channel.writeAndFlush(chatMessage);
+            } else {
+                //TODO: wmy 离线消息处理逻辑
+            }
+
         }
     }
 }

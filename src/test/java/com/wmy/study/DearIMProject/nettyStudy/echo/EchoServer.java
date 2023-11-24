@@ -31,7 +31,7 @@ public class EchoServer {
                                 ByteBuf response = ctx.alloc().buffer();
                                 response.writeBytes(byteBuf.getBytes());
                                 ctx.writeAndFlush(response);
-//                                super.channelRead(ctx, msg);
+                                super.channelRead(ctx, msg);
                             }
                         });
                     }
