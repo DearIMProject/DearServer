@@ -16,7 +16,6 @@ public class SocketHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         byte[] data = (byte[]) msg;
         log.info("收到消息：" + new String(data));
-        //TODO: wmy
         for (Channel channel : clients) {
 //            if (!channel.equals(ctx.channel())) {
             channel.writeAndFlush(data);

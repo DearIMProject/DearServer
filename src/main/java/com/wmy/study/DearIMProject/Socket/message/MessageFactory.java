@@ -19,9 +19,17 @@ public class MessageFactory {
             case TEXT, PICTURE, FILE, LINK, CHAT_MESSAGE -> {
                 message = new ChatMessage();
             }
+            case HEART_BEAT -> {
+                message = new HeartBeatMessage();
+            }
+            case REQUEST_OFFLINE_MESSAGES -> {
+                message = new RequestOfflineMessage();
+            }
         }
+        assert message != null;
         message.setTimestamp(new Date().getTime());
         message.setMessageType(messageType);
+        message.setStatus(1);
         return message;
     }
 }

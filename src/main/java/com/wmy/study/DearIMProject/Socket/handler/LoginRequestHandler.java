@@ -57,11 +57,8 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             message.setContent("error: cannot found token!");
         } else {
             message.setContent(Integer.toString(magicNumber));
-
-
             Channel channel = channelHandlerContext.channel();
             tokenChannel.addChannelToToken(token, channel);
-
         }
         channelHandlerContext.writeAndFlush(message);
     }

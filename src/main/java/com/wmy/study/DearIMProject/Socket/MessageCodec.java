@@ -75,7 +75,10 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
         out.writeInt(bytes.length);
         // 写入消息内容
         out.writeBytes(bytes);
-        list.add(out);
+        ByteBuf buffer = channelHandlerContext.alloc().buffer();
+        buffer.writeInt(out.readableBytes());
+        buffer.writeBytes(out);
+        list.add(buffer);
         //TODO: wmy 添加加密算法
     }
 
@@ -123,11 +126,6 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
         String content = new String(contentByte, StandardCharsets.UTF_8);
         message.setContent(content);
         log.debug(message.toString());
-        // 添加到数据库中
-        if (message.getMessageType() != MessageType.REQUEST_LOGIN) {
-            message.setMsgId(null);
-            messageService.save(message);
-        }
         list.add(message);
     }
 }

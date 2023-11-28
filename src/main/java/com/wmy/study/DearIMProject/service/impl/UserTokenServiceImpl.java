@@ -65,6 +65,13 @@ public class UserTokenServiceImpl extends ServiceImpl<IUserTokenDao, UserToken>
     }
 
     @Override
+    public UserToken getUserToken(String token) {
+        QueryWrapper<UserToken> wrapper = new QueryWrapper<>();
+        wrapper.eq("token", token);
+        return getOne(wrapper);
+    }
+
+    @Override
     public boolean logout(String token) throws BusinessException {
 
         if (token == null || token.isEmpty()) {

@@ -2,10 +2,12 @@ package com.wmy.study.DearIMProject.Socket.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wmy.study.DearIMProject.Socket.Message;
+import com.wmy.study.DearIMProject.Socket.MessageType;
 import com.wmy.study.DearIMProject.Socket.UserTokenChannel;
 import com.wmy.study.DearIMProject.Socket.message.ChatMessage;
 import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
 import com.wmy.study.DearIMProject.domain.UserToken;
+import com.wmy.study.DearIMProject.service.IMessageService;
 import com.wmy.study.DearIMProject.service.IUserTokenService;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -26,6 +28,9 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
     @Resource
     private IUserTokenService userTokenService;
 
+    @Resource
+    private IMessageService messageService;
+
     @PostConstruct
     public void init() {
         singleChatHandler = this;
@@ -35,17 +40,23 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ChatMessage chatMessage) throws Exception {
         //TODO: wmy 查找user对应的channel
         QueryWrapper<UserToken> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("uid", chatMessage.getFromId());
+        queryWrapper.eq("uid", chatMessage.getToId());
         List<UserToken> list = userTokenService.list(queryWrapper);
+        boolean hasSendMsg = false;
         for (UserToken userToken : list) {
             String token = userToken.getToken();
             Channel channel = userTokenChannel.getChannel(token);
             if (channel != null) {
+                hasSendMsg = true;
                 channel.writeAndFlush(chatMessage);
-            } else {
-                //TODO: wmy 离线消息处理逻辑
             }
-
+        }
+        chatMessage.setMsgId(null);
+        // 添加到数据库中
+        if (!hasSendMsg) {
+            messageService.saveOfflineMessage(chatMessage);
+        } else {
+            messageService.saveOnlineMessage(chatMessage);
         }
     }
 }

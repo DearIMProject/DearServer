@@ -48,6 +48,8 @@ public class User {
      */
     private Long registerTime;
 
+    private String icon;
+
     public String getUsername() {
         if (username == null || username.isEmpty()) {
             return email;

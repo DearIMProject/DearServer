@@ -58,11 +58,9 @@ public class UserController {
         registerCode.setUniKey(email);
         SecurityCode securityCode = securityCodeService.checkAndSave(registerCode);
         log.debug(securityCode.toString());
-        if (securityCode != null) {
-            boolean sendSuccess = emailService.sendSecurityCodeToEmail(securityCode);
-            if (sendSuccess) {
-                return new ResponseBean(true, null);
-            }
+        boolean sendSuccess = emailService.sendSecurityCodeToEmail(securityCode);
+        if (sendSuccess) {
+            return new ResponseBean(true, null);
         }
         return new ResponseBean(false, null);
     }
@@ -200,7 +198,6 @@ public class UserController {
     @RequestMapping("/logoutToken")
     @ResponseBody
     public ResponseBean logoutToken(String token) throws BusinessException {
-
         boolean success = userTokenService.logout(token);
         return new ResponseBean(success, null);
     }

@@ -31,19 +31,35 @@ public class UserTokenChannel {
 
         Channel findChannel = tokenChannelMap.get(token);
         if (findChannel != null) {
-            ChannelFuture closeFuture = findChannel.closeFuture();
-            closeFuture.addListener(new ChannelFutureListener() {
-
-                @Override
-                public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                    log.debug("oldChannel" + channelFuture.channel() + " is closed!");
-                }
-            });
+            findChannel.close();
+            return;
         }
         tokenChannelMap.put(token, channel);
+        ChannelFuture closeFuture = channel.closeFuture();
+        closeFuture.addListener(new ChannelFutureListener() {
+
+            @Override
+            public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                log.debug("oldChannel" + channelFuture.channel() + " is closed!");
+                boolean containsValue = tokenChannelMap.containsValue(channelFuture.channel());
+                String findToken = null;
+                for (Map.Entry<String, Channel> entry : tokenChannelMap.entrySet()) {
+                    if (entry.getValue().equals(channel)) {
+                        findToken = entry.getKey();
+                        break;
+                    }
+                }// end of for
+                if (findToken != null) {
+                    tokenChannelMap.remove(findToken);
+                    log.debug(tokenChannelMap.toString());
+                }
+            }
+        });
+
     }
 
     public Channel getChannel(String token) {
         return tokenChannelMap.get(token);
     }
+
 }

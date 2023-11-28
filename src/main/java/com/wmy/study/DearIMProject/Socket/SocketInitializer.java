@@ -1,6 +1,8 @@
 package com.wmy.study.DearIMProject.Socket;
 
+import com.wmy.study.DearIMProject.Socket.handler.HeartBeatRequestHandler;
 import com.wmy.study.DearIMProject.Socket.handler.LoginRequestHandler;
+import com.wmy.study.DearIMProject.Socket.handler.ReadedMessageHandler;
 import com.wmy.study.DearIMProject.Socket.handler.SingleChatHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -23,7 +25,10 @@ import org.springframework.stereotype.Component;
 public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     @Resource
     private LoginRequestHandler LOGIN_REQUESR_HANDLER;
-
+    @Resource
+    private HeartBeatRequestHandler HEART_BEAT_HANDLER;
+    @Resource
+    private ReadedMessageHandler READED_HANDLER;
     @Resource
     private MessageCodec MESSAGE_CODEC;
     LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
@@ -37,13 +42,8 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(LOGGING_HANDLER);
         pipeline.addLast(MESSAGE_CODEC);
         pipeline.addLast(LOGIN_REQUESR_HANDLER);
+        pipeline.addLast(HEART_BEAT_HANDLER);
+        pipeline.addLast(READED_HANDLER);
         pipeline.addLast(CHAT_HANDLER);
-
-//        pipeline.addLast(new ChannelInboundHandlerAdapter() {
-//            @Override
-//            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {//                ctx.writeAndFlush(msg);
-//                super.channelRead(ctx, msg);
-//            }
-//        });
     }
 }

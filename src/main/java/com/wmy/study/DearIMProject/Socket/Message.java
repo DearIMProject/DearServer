@@ -21,4 +21,6 @@ public abstract class Message {
     private String content;
     private MessageType messageType;
     private Long timestamp;
+    // 消息状态 0: 发送成功，未读 1：发送成功，已读 2：未发送，未读
+    private Integer status;
 }
