@@ -87,8 +87,7 @@ public class SecurityCodeServiceImpl extends ServiceImpl<ISecurityCodeDao, Secur
             User user = userService.getOne(userQueryWrapper);
             if (user.getStatus() == 0) {
                 user.setStatus(1);
-                boolean update = userService.updateById(user);
-                return update;
+                return userService.updateById(user);
             }
         }
         return false;
@@ -96,7 +95,7 @@ public class SecurityCodeServiceImpl extends ServiceImpl<ISecurityCodeDao, Secur
 
     @Override
     public SecurityCode sendCheckCode(String email) throws BusinessException {
-        if (email == null || email.length() == 0) {
+        if (email == null || email.isEmpty()) {
             throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "email 为空");
         }
         QueryWrapper<SecurityCode> queryWrapper = new QueryWrapper<>();
@@ -106,7 +105,6 @@ public class SecurityCodeServiceImpl extends ServiceImpl<ISecurityCodeDao, Secur
             // 已经有发过code 需要刷新
             removeById(securityCode.getCodeId());
         }
-        SecurityCode newSecurityCode = generateSecurityCode(email);
-        return newSecurityCode;
+        return generateSecurityCode(email);
     }
 }

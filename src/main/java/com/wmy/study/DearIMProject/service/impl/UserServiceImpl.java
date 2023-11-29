@@ -62,9 +62,9 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
         registerUser.setEmail(email);
         // 对密码做md5加盐
         registerUser.setPassword(MD5Utils.MD5Upper(password, magicNumber));
+        registerUser.setStatus(0);
         LogUtils.debug(registerUser.toString());
         boolean save = save(registerUser);
-
         return save;
     }
 
@@ -84,6 +84,11 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
             throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "用户暂未成功注册");
         }
         User user = list.get(0);
+        log.debug("1.1 判断是否已注销");
+        if (user.getStatus() == 2) {
+            throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "用户已注销！");
+        }
+        
         if (user.getStatus() == 0) {
             throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "请登录邮箱验证信息！");
         }
