@@ -17,14 +17,14 @@ import java.util.Map;
 public class UserTokenChannel {
     private final Map<String, Channel> tokenChannelMap = new HashMap<>();
 
-    public static UserTokenChannel userTokenChannel;
+//    public static UserTokenChannel userTokenChannel;
 
     public UserTokenChannel() {
     }
 
     @PostConstruct
     public void init() {
-        userTokenChannel = this;
+//        userTokenChannel = this;
     }
 
     public void addChannelToToken(String token, Channel channel) {
@@ -32,9 +32,9 @@ public class UserTokenChannel {
         Channel findChannel = tokenChannelMap.get(token);
         if (findChannel != null) {
             findChannel.close();
-            return;
         }
         tokenChannelMap.put(token, channel);
+
         ChannelFuture closeFuture = channel.closeFuture();
         closeFuture.addListener(new ChannelFutureListener() {
 

@@ -15,14 +15,14 @@ public class HeartBeatRequestHandler extends SimpleChannelInboundHandler<HeartBe
     @Resource
     private UserTokenChannel userTokenChannel;
 
-    public HeartBeatRequestHandler heartBeatRequestHandler;
+//    public HeartBeatRequestHandler heartBeatRequestHandler;
 
     public HeartBeatRequestHandler() {
     }
 
     @PostConstruct
     public void init() {
-        heartBeatRequestHandler = this;
+//        heartBeatRequestHandler = this;
     }
 
     @Override

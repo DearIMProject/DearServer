@@ -15,14 +15,16 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Slf4j
 @ChannelHandler.Sharable
 @Component
 public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> {
-    private SingleChatHandler singleChatHandler;
+    //    private SingleChatHandler singleChatHandler;
     @Resource
     private UserTokenChannel userTokenChannel;
     @Resource
@@ -33,7 +35,7 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
 
     @PostConstruct
     public void init() {
-        singleChatHandler = this;
+//        singleChatHandler = this;
     }
 
     @Override
@@ -41,6 +43,7 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         //TODO: wmy 查找user对应的channel
         QueryWrapper<UserToken> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid", chatMessage.getToId());
+        log.debug("发送给的uid:" + chatMessage.getToId());
         List<UserToken> list = userTokenService.list(queryWrapper);
         boolean hasSendMsg = false;
         for (UserToken userToken : list) {
@@ -48,6 +51,7 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
             Channel channel = userTokenChannel.getChannel(token);
             if (channel != null) {
                 hasSendMsg = true;
+                log.debug("找到用户userToken 发送信息" + channel);
                 channel.writeAndFlush(chatMessage);
             }
         }

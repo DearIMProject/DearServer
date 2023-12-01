@@ -46,4 +46,18 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(READED_HANDLER);
         pipeline.addLast(CHAT_HANDLER);
     }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.info("active: {}", ctx.channel().id().asShortText());
+        super.channelActive(ctx);
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.info("inactive: {}", ctx.channel().id().asShortText());
+        super.channelInactive(ctx);
+    }
 }
+
+

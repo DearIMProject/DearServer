@@ -36,14 +36,14 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
     @Resource
     private IMessageDao messageDao;
 
-    private static LoginRequestHandler loginRequestHandler;
+//    private static LoginRequestHandler loginRequestHandler;
 
     public LoginRequestHandler() {
     }
 
     @PostConstruct
     public void init() {
-        loginRequestHandler = this;
+//        loginRequestHandler = this;
     }
 
     @Override

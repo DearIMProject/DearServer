@@ -38,14 +38,14 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
     final int VERSION = 1;
     @Resource
     private IMessageService messageService;
-    private MessageCodec messageCodec;
+//    private MessageCodec messageCodec;
 
     public MessageCodec() {
     }
 
     @PostConstruct
     public void init() {
-        messageCodec = this;
+//        messageCodec = this;
     }
 
     @Override
