@@ -1,6 +1,6 @@
 netty:
   boss: 1
-  worker: 1
+  worker: 8
   port: 9999
 #  portSalve: 18026
 #  host: 127.0.0.1

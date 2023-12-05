@@ -9,10 +9,7 @@ import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
 import com.wmy.study.DearIMProject.domain.UserToken;
 import com.wmy.study.DearIMProject.service.IMessageService;
 import com.wmy.study.DearIMProject.service.IUserTokenService;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +49,7 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
             if (channel != null) {
                 hasSendMsg = true;
                 log.debug("找到用户userToken 发送信息" + channel);
-                channel.writeAndFlush(chatMessage);
+                channel.writeAndFlush(chatMessage).sync();
             }
         }
         chatMessage.setMsgId(null);
