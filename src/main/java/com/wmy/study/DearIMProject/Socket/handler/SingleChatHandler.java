@@ -43,17 +43,25 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         log.debug("发送给的uid:" + chatMessage.getToId());
         List<UserToken> list = userTokenService.list(queryWrapper);
         boolean hasSendMsg = false;
+        Channel findChannel = null;
         for (UserToken userToken : list) {
             String token = userToken.getToken();
             Channel channel = userTokenChannel.getChannel(token);
             if (channel != null) {
                 hasSendMsg = true;
                 log.debug("找到用户userToken 发送信息" + channel);
-                channel.writeAndFlush(chatMessage).sync();
+                findChannel = channel;
+                break;
             }
         }
         chatMessage.setMsgId(null);
         // 添加到数据库中
+        Message successMsg = MessageFactory.factoryWithMessageType(MessageType.SEND_SUCCESS_MESSAGE);
+        successMsg.setContent(String.valueOf(chatMessage.getTimestamp()));
+        channelHandlerContext.writeAndFlush(successMsg).sync();
+        if (findChannel != null) {
+            findChannel.writeAndFlush(chatMessage).sync();
+        }
         if (!hasSendMsg) {
             messageService.saveOfflineMessage(chatMessage);
         } else {

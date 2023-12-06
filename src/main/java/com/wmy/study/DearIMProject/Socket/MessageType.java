@@ -10,7 +10,8 @@ public enum MessageType {
     REQUEST_LOGIN,
     HEART_BEAT,
     REQUEST_OFFLINE_MESSAGES,
-    READED_MESSAGE;
+    READED_MESSAGE,
+    SEND_SUCCESS_MESSAGE;
 
     public static MessageType fromInt(int x) {
         return switch (x) {
@@ -22,6 +23,7 @@ public enum MessageType {
             case 6 -> HEART_BEAT;
             case 7 -> REQUEST_OFFLINE_MESSAGES;
             case 8 -> READED_MESSAGE;
+            case 9 -> SEND_SUCCESS_MESSAGE;
             default -> TEXT;
         };
     }

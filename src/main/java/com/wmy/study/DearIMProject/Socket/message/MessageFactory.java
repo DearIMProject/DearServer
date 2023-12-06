@@ -25,6 +25,9 @@ public class MessageFactory {
             case REQUEST_OFFLINE_MESSAGES -> {
                 message = new RequestOfflineMessage();
             }
+            case SEND_SUCCESS_MESSAGE -> {
+                message = new SendSuccessMessage();
+            }
         }
         assert message != null;
         message.setTimestamp(new Date().getTime());
