@@ -33,6 +33,7 @@ public class MessageFactory {
         message.setTimestamp(new Date().getTime());
         message.setMessageType(messageType);
         message.setStatus(1);
+        message.setMsgId(null);
         return message;
     }
 }
