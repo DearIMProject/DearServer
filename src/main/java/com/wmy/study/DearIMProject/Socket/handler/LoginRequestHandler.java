@@ -53,6 +53,11 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         queryWrapper.eq("token", token);
         UserToken userToken = tokenService.getOne(queryWrapper);
         Message message = MessageFactory.factoryWithMessageType(MessageType.REQUEST_LOGIN);
+        message.setMsgId(0L);
+        message.setFromId(0L);
+        message.setFromEntity(MessageEntityType.SERVER);
+        message.setToId(0L);
+        message.setToEntity(MessageEntityType.USER);
         if (userToken == null) {
             message.setContent("error: cannot found token!");
         } else {
@@ -60,6 +65,6 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             Channel channel = channelHandlerContext.channel();
             tokenChannel.addChannelToToken(token, channel);
         }
-        channelHandlerContext.writeAndFlush(message);
+        channelHandlerContext.writeAndFlush(message).sync();
     }
 }

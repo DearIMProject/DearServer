@@ -38,4 +38,6 @@ public enum ErrorCode {
      * 找不到记录
      */
     ERROR_CODE_RECORD_NOT_FOUND,
+
+    ERROR_CODE_FILE,
 }

@@ -1,6 +1,10 @@
 server:
   port: 8888
-
+  servlet:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
 
 spring:
   datasource:
@@ -14,6 +18,10 @@ spring:
     username: wenmingyan1990@163.com
     password: RIXAGJSHRQHPLHNG
     default-encoding: UTF-8
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 mail:
   fromMail:
@@ -22,6 +30,7 @@ mail:
 application:
   name: 展信佳
   magicNumber: 891013
+  tempFilePath: /Users/Apple/Developer/DearIM/IM/uploadFiles/
 
 mybatis-plus:
   global-config:

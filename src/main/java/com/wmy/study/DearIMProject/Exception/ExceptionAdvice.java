@@ -1,7 +1,10 @@
 package com.wmy.study.DearIMProject.Exception;
 
 import com.wmy.study.DearIMProject.domain.ResponseBean;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ExceptionAdvice {
+
     @ResponseBody
     @ExceptionHandler(value = BusinessException.class) // 参数校验异常
     public ResponseBean ConstraintViolationExceptionHandler(BusinessException ex) {

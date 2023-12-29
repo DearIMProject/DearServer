@@ -30,6 +30,6 @@ public class HeartBeatRequestHandler extends SimpleChannelInboundHandler<HeartBe
         // 原封不动发回去消息
         heartBeatMessage.setToId(heartBeatMessage.getFromId());
         heartBeatMessage.setToEntity(heartBeatMessage.getFromEntity());
-        channelHandlerContext.writeAndFlush(heartBeatMessage);
+        channelHandlerContext.writeAndFlush(heartBeatMessage).sync();
     }
 }

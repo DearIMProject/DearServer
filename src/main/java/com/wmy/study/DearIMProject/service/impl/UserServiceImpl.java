@@ -13,6 +13,7 @@ import com.wmy.study.DearIMProject.service.IUserService;
 import com.wmy.study.DearIMProject.service.IUserTokenService;
 import com.wmy.study.DearIMProject.Utils.EmailUtils;
 import com.wmy.study.DearIMProject.utils.MD5Utils;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,9 @@ import java.util.List;
 @Service
 public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUserService {
 
-    @Autowired
+    @Resource
     private IEmailService emailService;
-    @Autowired
+    @Resource
     private IUserTokenService userTokenService;
 
     @Value("${application.magicNumber}")
@@ -88,7 +89,7 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
         if (user.getStatus() == 2) {
             throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "用户已注销！");
         }
-        
+
         if (user.getStatus() == 0) {
             throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "请登录邮箱验证信息！");
         }

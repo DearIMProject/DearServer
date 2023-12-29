@@ -71,9 +71,9 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         successMsg.setMsgId(chatMessage.getMsgId());
         successMsg.setFromEntity(MessageEntityType.SERVER);
         successMsg.setFromId(0L);
-        channelHandlerContext.writeAndFlush(successMsg).sync();
+        channelHandlerContext.writeAndFlush(successMsg);
         if (findChannel != null) {
-            findChannel.writeAndFlush(chatMessage).sync();
+            findChannel.writeAndFlush(chatMessage);
         }
 
 
