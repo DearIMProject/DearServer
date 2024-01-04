@@ -9,6 +9,7 @@ import com.wmy.study.DearIMProject.service.IEmailService;
 import com.wmy.study.DearIMProject.service.ISecurityCodeService;
 import com.wmy.study.DearIMProject.service.IUserService;
 import com.wmy.study.DearIMProject.service.IUserTokenService;
+import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,13 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
+    @Resource
     private IUserService userService;
-    @Autowired
+    @Resource
     private IUserTokenService userTokenService;
-    @Autowired
+    @Resource
     private IEmailService emailService;
-    @Autowired
+    @Resource
     private ISecurityCodeService securityCodeService;
 
     /**

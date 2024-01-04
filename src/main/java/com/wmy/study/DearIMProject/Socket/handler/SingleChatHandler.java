@@ -75,7 +75,5 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         if (findChannel != null) {
             findChannel.writeAndFlush(chatMessage);
         }
-
-
     }
 }

@@ -20,7 +20,7 @@ import java.io.IOException;
 @RequestMapping("/file")
 public class UploadFileController {
 
-    @Autowired
+    @Resource
     private MessageSource messageSource;
 
     @Resource
