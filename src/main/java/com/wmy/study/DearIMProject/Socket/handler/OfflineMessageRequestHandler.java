@@ -23,7 +23,7 @@ public class OfflineMessageRequestHandler extends SimpleChannelInboundHandler<Re
         String token = message.getContent();
         List<Message> messages = messageService.getOfflineMessages(token);
         for (Message offlineMessage : messages) {
-            context.channel().writeAndFlush(offlineMessage);
+            context.channel().writeAndFlush(offlineMessage).sync();
         }
     }
 }

@@ -141,6 +141,8 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
             return null;
         }
         User user = getById(userToken.getUid());
+        user.setToken(token);
+
         return user;
     }
 }

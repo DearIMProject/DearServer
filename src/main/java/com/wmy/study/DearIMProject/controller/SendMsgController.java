@@ -47,14 +47,28 @@ public class SendMsgController {
         QueryWrapper<UserToken> wrapper = new QueryWrapper<>();
         wrapper.eq("uid", toUid);
         List<UserToken> list = tokenService.list(wrapper);
+
+
+        boolean hasFindChannel = false;
+        boolean hasSendMesssage = false;
+
         for (UserToken userToken : list) {
             String token = userToken.getToken();
             Channel channel = userTokenChannel.getChannel(token);
             if (channel != null) {
                 log.info("找到一个channel");
+                if (!hasSendMesssage) {
+                    messageService.saveOnlineMessage(message);
+                    hasSendMesssage = true;
+                }
                 channel.writeAndFlush(message).sync();
+                hasFindChannel = true;
             }
         }
+        if (!hasFindChannel) {
+            messageService.saveOfflineMessage(message);
+        }
+
         return new ResponseBean(true, null);
     }
 
@@ -66,7 +80,6 @@ public class SendMsgController {
         message.setToEntity(MessageEntityType.USER);
         message.setContent(content);
         message.setMsgId(null);
-        messageService.saveOnlineMessage(message);
         return message;
     }
 }

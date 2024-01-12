@@ -113,12 +113,12 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
         // 发送方
         long fromId = in.readLong();
         message.setFromId(fromId);
-        MessageEntityType entityType = MessageEntityType.fromInt(in.readByte());
+        MessageEntityType entityType = MessageEntityType.fromInt((int) in.readByte());
         message.setFromEntity(entityType);
         // 接收方
         long toId = in.readLong();
         message.setToId(toId);
-        message.setToEntity(MessageEntityType.fromInt(in.readByte()));
+        message.setToEntity(MessageEntityType.fromInt((int) in.readByte()));
         // 获取内容字节数组
         int length = in.readInt();
         byte[] contentByte = new byte[length];

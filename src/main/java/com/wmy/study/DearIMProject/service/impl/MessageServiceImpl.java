@@ -9,14 +9,19 @@ import com.wmy.study.DearIMProject.domain.User;
 import com.wmy.study.DearIMProject.service.IMessageService;
 import com.wmy.study.DearIMProject.service.IUserService;
 import jakarta.annotation.Resource;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class MessageServiceImpl extends ServiceImpl<IMessageDao, Message> implements IMessageService {
     @Resource
     private IUserService userService;
+    @Resource
+    private IMessageDao dao;
 
     @Override
     public void saveOfflineMessage(Message message) {
@@ -33,10 +38,10 @@ public class MessageServiceImpl extends ServiceImpl<IMessageDao, Message> implem
     @Override
     public List<Message> getOfflineMessages(String token) {
         User user = userService.getFromToken(token);
-        QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", 2);
-        queryWrapper.eq("to_id", user.getUserId());
-        return list(queryWrapper);
+        QueryWrapper<Message> wrapper = new QueryWrapper<>();
+        wrapper.eq("status", 0);
+        List<Message> list = list(wrapper);
+        return list;
     }
 
     @Override

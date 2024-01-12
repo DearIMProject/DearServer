@@ -1,9 +1,6 @@
 package com.wmy.study.DearIMProject.Socket;
 
-import com.wmy.study.DearIMProject.Socket.handler.HeartBeatRequestHandler;
-import com.wmy.study.DearIMProject.Socket.handler.LoginRequestHandler;
-import com.wmy.study.DearIMProject.Socket.handler.ReadedMessageHandler;
-import com.wmy.study.DearIMProject.Socket.handler.SingleChatHandler;
+import com.wmy.study.DearIMProject.Socket.handler.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -35,6 +32,9 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     @Resource
     private SingleChatHandler CHAT_HANDLER;
 
+    @Resource
+    private OfflineMessageRequestHandler OFFLINE_HANDLER;
+
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
@@ -43,8 +43,10 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(MESSAGE_CODEC);
         pipeline.addLast(LOGIN_REQUESR_HANDLER);
         pipeline.addLast(HEART_BEAT_HANDLER);
+        pipeline.addLast(OFFLINE_HANDLER);
         pipeline.addLast(READED_HANDLER);
         pipeline.addLast(CHAT_HANDLER);
+
     }
 
     @Override
