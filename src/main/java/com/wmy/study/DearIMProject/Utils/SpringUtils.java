@@ -1,4 +1,4 @@
-package com.wmy.study.DearIMProject;
+package com.wmy.study.DearIMProject.Utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

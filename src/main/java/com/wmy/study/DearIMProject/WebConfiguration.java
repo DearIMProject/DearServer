@@ -32,7 +32,8 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns("/user/register")
                 .excludePathPatterns("user/sendCheckCode")
                 .excludePathPatterns("/user/checkCode")
-                .excludePathPatterns("/message/send");
+                .excludePathPatterns("/message/send")
+                .excludePathPatterns("/message/offlineMessage");
 
 
 //        registry.addInterceptor(recordInterceptor())

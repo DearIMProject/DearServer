@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -70,6 +71,14 @@ public class SendMsgController {
         }
 
         return new ResponseBean(true, null);
+    }
+
+    @PostMapping("/offlineMessage")
+    public ResponseBean getOfflineMessage(String token) {
+        List<Message> offlineMessages = messageService.getOfflineMessages(token);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("messages", offlineMessages);
+        return new ResponseBean(true, map);
     }
 
     private Message getMessage(String fromUid, String toUid, String content) {

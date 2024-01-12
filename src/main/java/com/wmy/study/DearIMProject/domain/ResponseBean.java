@@ -1,6 +1,7 @@
 package com.wmy.study.DearIMProject.domain;
 
-import com.wmy.study.DearIMProject.SpringUtils;
+
+import com.wmy.study.DearIMProject.Utils.SpringUtils;
 import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.extern.java.Log;
