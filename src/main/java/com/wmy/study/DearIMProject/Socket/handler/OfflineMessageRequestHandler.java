@@ -19,9 +19,9 @@ public class OfflineMessageRequestHandler extends SimpleChannelInboundHandler<Re
 
     @Override
     protected void channelRead0(ChannelHandlerContext context, RequestOfflineMessage message) throws Exception {
-        //TODO: wmy 发送offlinemessage
+        // 发送offline Message
         String token = message.getContent();
-        List<Message> messages = messageService.getOfflineMessages(token);
+        List<Message> messages = messageService.getOfflineMessages(token, message.getTimestamp());
         for (Message offlineMessage : messages) {
             context.channel().writeAndFlush(offlineMessage).sync();
         }

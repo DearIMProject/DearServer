@@ -39,7 +39,7 @@ mybatis-plus:
     db-config:
       id-type: AUTO
 
-  type-handlers-package: com.wmy.study.DearIMProject.typeHandler
+#  type-handlers-package: com.wmy.study.DearIMProject.typeHandler
 
 logging:
   level:

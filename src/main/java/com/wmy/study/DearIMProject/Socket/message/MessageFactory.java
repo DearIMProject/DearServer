@@ -2,6 +2,7 @@ package com.wmy.study.DearIMProject.Socket.message;
 
 import com.wmy.study.DearIMProject.Socket.Message;
 import com.wmy.study.DearIMProject.Socket.MessageEntityType;
+import com.wmy.study.DearIMProject.Socket.MessageStatus;
 import com.wmy.study.DearIMProject.Socket.MessageType;
 
 import javax.xml.crypto.Data;
@@ -32,7 +33,7 @@ public class MessageFactory {
         assert message != null;
         message.setTimestamp(new Date().getTime());
         message.setMessageType(messageType);
-        message.setStatus(1);
+        message.setStatus(MessageStatus.STATUS_SUCCESS_READED);
         return message;
     }
 }

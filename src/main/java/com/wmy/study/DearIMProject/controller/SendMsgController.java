@@ -75,14 +75,14 @@ public class SendMsgController {
 
     @PostMapping("/offlineMessage")
     public ResponseBean getOfflineMessage(String token) {
-        List<Message> offlineMessages = messageService.getOfflineMessages(token);
+        List<Message> offlineMessages = messageService.getOfflineMessages(token, 0L);
         HashMap<String, Object> map = new HashMap<>();
         map.put("messages", offlineMessages);
         return new ResponseBean(true, map);
     }
 
     private Message getMessage(String fromUid, String toUid, String content) {
-        Message message = MessageFactory.factoryWithMessageType(MessageType.CHAT_MESSAGE);
+        Message message = MessageFactory.factoryWithMessageType(MessageType.TEXT);
         message.setFromId(Long.parseLong(fromUid));
         message.setFromEntity(MessageEntityType.USER);
         message.setToId(Long.parseLong(toUid));
