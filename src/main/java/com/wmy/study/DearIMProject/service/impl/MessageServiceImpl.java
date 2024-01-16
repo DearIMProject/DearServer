@@ -40,9 +40,9 @@ public class MessageServiceImpl extends ServiceImpl<IMessageDao, Message> implem
     public List<Message> getOfflineMessages(String token, Long timestamp) {
         User user = userService.getFromToken(token);
         QueryWrapper<Message> wrapper = new QueryWrapper<>();
-        wrapper.ge("timestamp", timestamp);
+        wrapper.gt("timestamp", timestamp);
         // 离线消息中发送方或接收方为自己的
-        wrapper.eq("from_id", user.getUserId()).or().eq("to_id", user.getUserId());
+        wrapper.and(i -> i.eq("from_id", user.getUserId()).or().eq("to_id", user.getUserId()));
         // 消息状态为所有未读的状态
 //        wrapper.eq("status", 2).or().eq("status", 0);
         return list(wrapper);
