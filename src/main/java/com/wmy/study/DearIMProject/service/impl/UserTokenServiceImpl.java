@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wmy.study.DearIMProject.Exception.BusinessException;
 import com.wmy.study.DearIMProject.dao.IUserTokenDao;
 import com.wmy.study.DearIMProject.domain.ErrorCode;
+import com.wmy.study.DearIMProject.domain.User;
 import com.wmy.study.DearIMProject.domain.UserToken;
+import com.wmy.study.DearIMProject.service.IUserService;
 import com.wmy.study.DearIMProject.service.IUserTokenService;
 import com.wmy.study.DearIMProject.utils.MD5Utils;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,6 +19,8 @@ import java.util.List;
 @Service
 public class UserTokenServiceImpl extends ServiceImpl<IUserTokenDao, UserToken>
         implements IUserTokenService {
+    
+
     @Override
     public String checkAndRefreshToken(String token) throws BusinessException {
         QueryWrapper<UserToken> queryWrapper = new QueryWrapper<UserToken>();
@@ -51,17 +56,6 @@ public class UserTokenServiceImpl extends ServiceImpl<IUserTokenDao, UserToken>
             return s;
         }
         return "";
-    }
-
-    @Override
-    public List<UserToken> getUserTokens(String email) throws BusinessException {
-        if (email == null || email.isEmpty()) {
-            throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "email 为空");
-        }
-        QueryWrapper<UserToken> wrapper = new QueryWrapper<>();
-        List<UserToken> list = list(wrapper);
-//        log.debug(list);
-        return list;
     }
 
     @Override

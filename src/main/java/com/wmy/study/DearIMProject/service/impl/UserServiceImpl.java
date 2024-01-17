@@ -14,7 +14,6 @@ import com.wmy.study.DearIMProject.service.IUserTokenService;
 import com.wmy.study.DearIMProject.Utils.EmailUtils;
 import com.wmy.study.DearIMProject.utils.MD5Utils;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -144,5 +143,28 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
         user.setToken(token);
 
         return user;
+    }
+
+    @Override
+    public List<UserToken> getUserTokens(String email) throws BusinessException {
+        if (email == null || email.isEmpty()) {
+            throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "email 为空");
+        }
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("email", email);
+        User user = getOne(wrapper);
+        return getUserTokens(user.getUserId());
+    }
+
+
+    @Override
+    public List<UserToken> getUserTokens(Long userId) throws BusinessException {
+        if (userId == 0) {
+            throw new BusinessException(ErrorCode.ERROR_CODE_PARAM, "userId 为 0");
+        }
+        QueryWrapper<UserToken> tokenWrapper = new QueryWrapper<>();
+        tokenWrapper.eq("uid", userId);
+
+        return userTokenService.list(tokenWrapper);
     }
 }

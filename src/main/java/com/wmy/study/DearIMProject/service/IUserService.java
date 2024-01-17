@@ -3,6 +3,9 @@ package com.wmy.study.DearIMProject.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wmy.study.DearIMProject.Exception.BusinessException;
 import com.wmy.study.DearIMProject.domain.User;
+import com.wmy.study.DearIMProject.domain.UserToken;
+
+import java.util.List;
 
 public interface IUserService extends IService<User> {
     /**
@@ -40,4 +43,8 @@ public interface IUserService extends IService<User> {
      * @return user
      */
     User getFromToken(String token);
+
+    List<UserToken> getUserTokens(String email) throws BusinessException;
+
+    List<UserToken> getUserTokens(Long userId) throws BusinessException;
 }

@@ -24,13 +24,6 @@ public interface IUserTokenService extends IService<UserToken> {
      */
     String getToken(String token);
 
-    /**
-     * 获取tokens
-     *
-     * @param email
-     * @return
-     */
-    List<UserToken> getUserTokens(String email) throws BusinessException;
 
     UserToken getUserToken(String token);
 

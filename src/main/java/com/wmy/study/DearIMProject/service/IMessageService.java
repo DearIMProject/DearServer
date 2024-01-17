@@ -19,6 +19,13 @@ public interface IMessageService extends IService<Message> {
      */
     List<Message> getOfflineMessages(String token, Long timestamp);
 
-    void setReaded(Long msgId);
+    void setReaded(Long timestamp);
 
+    /**
+     * 获取
+     *
+     * @param timestamp
+     * @return
+     */
+    Message getMessageByTimestamp(Long timestamp);
 }

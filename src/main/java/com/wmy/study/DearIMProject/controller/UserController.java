@@ -186,7 +186,7 @@ public class UserController {
     @ResponseBody
     public ResponseBean userTokens(String email) throws BusinessException {
 
-        List<UserToken> userTokens = userTokenService.getUserTokens(email);
+        List<UserToken> userTokens = userService.getUserTokens(email);
         if (userTokens != null) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("tokens", userTokens);

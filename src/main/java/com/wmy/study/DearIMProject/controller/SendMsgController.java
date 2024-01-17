@@ -2,6 +2,7 @@ package com.wmy.study.DearIMProject.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.wmy.study.DearIMProject.Exception.BusinessException;
 import com.wmy.study.DearIMProject.Socket.Message;
 import com.wmy.study.DearIMProject.Socket.MessageEntityType;
 import com.wmy.study.DearIMProject.Socket.MessageType;
@@ -10,6 +11,7 @@ import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
 import com.wmy.study.DearIMProject.domain.ResponseBean;
 import com.wmy.study.DearIMProject.domain.UserToken;
 import com.wmy.study.DearIMProject.service.IMessageService;
+import com.wmy.study.DearIMProject.service.IUserService;
 import com.wmy.study.DearIMProject.service.IUserTokenService;
 import io.netty.channel.Channel;
 import jakarta.annotation.Resource;
@@ -30,6 +32,9 @@ public class SendMsgController {
     private UserTokenChannel userTokenChannel;
     @Resource
     private IUserTokenService tokenService;
+
+    @Resource
+    private IUserService userService;
 
     @Resource
     private IMessageService messageService;
@@ -79,6 +84,36 @@ public class SendMsgController {
         HashMap<String, Object> map = new HashMap<>();
         map.put("messages", offlineMessages);
         return new ResponseBean(true, map);
+    }
+
+    @PostMapping("/sendReadedMessage")
+    public ResponseBean sendReadedMessage(Long timestamp) throws BusinessException {
+        Message message = messageService.getMessageByTimestamp(timestamp);
+        log.debug("message" + message);
+        messageService.setReaded(timestamp);
+        // 发送给用户告知已读状态
+        List<UserToken> userTokens = userService.getUserTokens(message.getFromId());
+        boolean isSend = false;
+        Message readMessage = MessageFactory.factoryWithMessageType(MessageType.READED_MESSAGE);
+        readMessage.setFromId(message.getFromId());
+        readMessage.setFromEntity(message.getFromEntity());
+        readMessage.setToEntity(message.getToEntity());
+        readMessage.setToId(message.getToId());
+        readMessage.setMsgId(message.getMsgId());
+        readMessage.setContent(timestamp.toString());
+        for (UserToken userToken : userTokens) {
+            Channel channel = userTokenChannel.getChannel(userToken.getToken());
+            if (channel != null) {
+                channel.writeAndFlush(readMessage);
+                isSend = true;
+            }
+        }
+        // 如果用户不在线，则放到消息库中
+        if (!isSend) {
+            readMessage.setMsgId(null);
+            messageService.save(readMessage);
+        }
+        return new ResponseBean(true, null);
     }
 
     private Message getMessage(String fromUid, String toUid, String content) {

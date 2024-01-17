@@ -49,9 +49,17 @@ public class MessageServiceImpl extends ServiceImpl<IMessageDao, Message> implem
     }
 
     @Override
-    public void setReaded(Long msgId) {
+    public void setReaded(Long timestamp) {
         UpdateWrapper<Message> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("status", 1);
+        updateWrapper.eq("timestamp", timestamp);
         update(updateWrapper);
+    }
+
+    @Override
+    public Message getMessageByTimestamp(Long timestamp) {
+        QueryWrapper<Message> wrapper = new QueryWrapper<>();
+        wrapper.eq("timestamp", timestamp);
+        return getOne(wrapper);
     }
 }

@@ -29,6 +29,9 @@ public class MessageFactory {
             case SEND_SUCCESS_MESSAGE -> {
                 message = new SendSuccessMessage();
             }
+            case READED_MESSAGE -> {
+                message = new ReadedMessage();
+            }
         }
         assert message != null;
         message.setTimestamp(new Date().getTime());
