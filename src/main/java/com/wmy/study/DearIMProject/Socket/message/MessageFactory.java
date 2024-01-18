@@ -39,4 +39,5 @@ public class MessageFactory {
         message.setStatus(MessageStatus.STATUS_SUCCESS_READED);
         return message;
     }
+
 }

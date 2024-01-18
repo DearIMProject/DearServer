@@ -34,6 +34,8 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
 
     @Resource
     private OfflineMessageRequestHandler OFFLINE_HANDLER;
+    @Resource
+    private TransparentMessageHandler TRANSPARENT_HANDLER;
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
@@ -46,6 +48,7 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(OFFLINE_HANDLER);
         pipeline.addLast(READED_HANDLER);
         pipeline.addLast(CHAT_HANDLER);
+        pipeline.addLast(TRANSPARENT_HANDLER);
 
     }
 

@@ -17,7 +17,8 @@ public enum MessageType implements IEnum<Integer> {
     HEART_BEAT(6, "心跳"),
     REQUEST_OFFLINE_MESSAGES(7, "请求离线消息"),
     READED_MESSAGE(8, "已读消息"),
-    SEND_SUCCESS_MESSAGE(9, "发送成功");
+    SEND_SUCCESS_MESSAGE(9, "发送成功"),
+    TRANSPARENT_MESSAGE(10, "透传消息");
 
     public static MessageType fromInt(int x) {
         return switch (x) {
@@ -30,10 +31,12 @@ public enum MessageType implements IEnum<Integer> {
             case 7 -> REQUEST_OFFLINE_MESSAGES;
             case 8 -> READED_MESSAGE;
             case 9 -> SEND_SUCCESS_MESSAGE;
+            case 10 -> TRANSPARENT_MESSAGE;
             default -> TEXT;
         };
     }
 
+    @JsonValue
     @EnumValue
     private final Integer type;
     private final String desc;

@@ -7,6 +7,7 @@ import com.wmy.study.DearIMProject.Socket.MessageType;
 import com.wmy.study.DearIMProject.Socket.UserTokenChannel;
 import com.wmy.study.DearIMProject.Socket.message.ChatMessage;
 import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
+import com.wmy.study.DearIMProject.Socket.message.SuccessContentJsonModel;
 import com.wmy.study.DearIMProject.domain.UserToken;
 import com.wmy.study.DearIMProject.service.IMessageService;
 import com.wmy.study.DearIMProject.service.IUserTokenService;
@@ -62,6 +63,10 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         successMsg.setContent(String.valueOf(chatMessage.getTimestamp()));
         successMsg.setToId(chatMessage.getFromId());
         successMsg.setToEntity(MessageEntityType.USER);
+        successMsg.setContent(new SuccessContentJsonModel(chatMessage.getMsgId(),
+                chatMessage.getTimestamp(),
+                chatMessage.getMessageType(),
+                String.valueOf(chatMessage.getTimestamp())).jsonString());
         // 添加到数据库中
         if (!hasSendMsg) {
             messageService.saveOfflineMessage(chatMessage);

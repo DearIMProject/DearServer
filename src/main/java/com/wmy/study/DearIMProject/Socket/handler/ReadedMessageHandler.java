@@ -1,10 +1,12 @@
 package com.wmy.study.DearIMProject.Socket.handler;
 
 import com.wmy.study.DearIMProject.Socket.Message;
+import com.wmy.study.DearIMProject.Socket.MessageEntityType;
 import com.wmy.study.DearIMProject.Socket.MessageType;
 import com.wmy.study.DearIMProject.Socket.UserTokenChannel;
 import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
 import com.wmy.study.DearIMProject.Socket.message.ReadedMessage;
+import com.wmy.study.DearIMProject.Socket.message.SuccessContentJsonModel;
 import com.wmy.study.DearIMProject.domain.UserToken;
 import com.wmy.study.DearIMProject.service.IMessageService;
 import com.wmy.study.DearIMProject.service.IUserService;
@@ -62,5 +64,18 @@ public class ReadedMessageHandler extends SimpleChannelInboundHandler<ReadedMess
             readMessage.setMsgId(null);
             messageService.save(readMessage);
         }
+        // 给已读放发送已读消息回执
+        Message successMsg = MessageFactory.factoryWithMessageType(MessageType.SEND_SUCCESS_MESSAGE);
+        successMsg.setContent(String.valueOf(readMessage.getTimestamp()));
+        successMsg.setToId(readMessage.getFromId());
+        successMsg.setFromId(0L);
+        successMsg.setFromEntity(MessageEntityType.SERVER);
+        successMsg.setToEntity(MessageEntityType.USER);
+        successMsg.setMsgId(0L);
+        successMsg.setContent(new SuccessContentJsonModel(readedMessage.getMsgId(),
+                readMessage.getTimestamp(),
+                readMessage.getMessageType(),
+                timestamp.toString()).jsonString());
+        channelHandlerContext.channel().writeAndFlush(successMsg).sync();
     }
 }

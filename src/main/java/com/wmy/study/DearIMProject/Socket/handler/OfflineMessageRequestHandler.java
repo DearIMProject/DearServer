@@ -7,10 +7,12 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Slf4j
 @ChannelHandler.Sharable
 @Component
 public class OfflineMessageRequestHandler extends SimpleChannelInboundHandler<RequestOfflineMessage> {
@@ -24,6 +26,7 @@ public class OfflineMessageRequestHandler extends SimpleChannelInboundHandler<Re
         List<Message> messages = messageService.getOfflineMessages(token, message.getTimestamp());
         for (Message offlineMessage : messages) {
             context.channel().writeAndFlush(offlineMessage).sync();
+            log.debug("message" + message);
         }
     }
 }
