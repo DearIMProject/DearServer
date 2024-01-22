@@ -53,6 +53,9 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
                 hasSendMsg = true;
                 log.debug("找到用户userToken 发送信息" + channel);
                 findChannel = channel;
+                if (!channelHandlerContext.channel().equals(findChannel)) {
+                    findChannel.writeAndFlush(chatMessage);
+                }
                 break;
             }
         }
@@ -77,8 +80,5 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         successMsg.setFromEntity(MessageEntityType.SERVER);
         successMsg.setFromId(0L);
         channelHandlerContext.writeAndFlush(successMsg);
-        if (findChannel != null) {
-            findChannel.writeAndFlush(chatMessage);
-        }
     }
 }

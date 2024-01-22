@@ -42,40 +42,31 @@ public class ReadedMessageHandler extends SimpleChannelInboundHandler<ReadedMess
         Message message = messageService.getMessageByTimestamp(timestamp);
         log.debug("message" + message);
         messageService.setReaded(timestamp);
-        // 发送给用户告知已读状态
+        // 发送给用户告知已读状态， 已读消息直接透传给对方
         List<UserToken> userTokens = userService.getUserTokens(message.getFromId());
-        boolean isSend = false;
-        Message readMessage = MessageFactory.factoryWithMessageType(MessageType.READED_MESSAGE);
-        readMessage.setFromId(message.getFromId());
-        readMessage.setFromEntity(message.getFromEntity());
-        readMessage.setToEntity(message.getToEntity());
-        readMessage.setToId(message.getToId());
-        readMessage.setMsgId(message.getMsgId());
-        readMessage.setContent(timestamp.toString());
         for (UserToken userToken : userTokens) {
             Channel channel = userTokenChannel.getChannel(userToken.getToken());
             if (channel != null) {
-                channel.writeAndFlush(readMessage);
-                isSend = true;
+                channel.writeAndFlush(readedMessage);
             }
         }
-        // 如果用户不在线，则放到消息库中
-        if (!isSend) {
-            readMessage.setMsgId(null);
-            messageService.save(readMessage);
-        }
+        // 已读消息放到消息库中
+        readedMessage.setMsgId(null);
+        messageService.save(readedMessage);
+
         // 给已读放发送已读消息回执
         Message successMsg = MessageFactory.factoryWithMessageType(MessageType.SEND_SUCCESS_MESSAGE);
-        successMsg.setContent(String.valueOf(readMessage.getTimestamp()));
-        successMsg.setToId(readMessage.getFromId());
-        successMsg.setFromId(0L);
-        successMsg.setFromEntity(MessageEntityType.SERVER);
+        successMsg.setContent(String.valueOf(readedMessage.getTimestamp()));
+        successMsg.setToId(readedMessage.getFromId());
         successMsg.setToEntity(MessageEntityType.USER);
+        successMsg.setFromId(readedMessage.getToId());
+        successMsg.setFromEntity(MessageEntityType.SERVER);
         successMsg.setMsgId(0L);
         successMsg.setContent(new SuccessContentJsonModel(readedMessage.getMsgId(),
-                readMessage.getTimestamp(),
-                readMessage.getMessageType(),
+                readedMessage.getTimestamp(),
+                readedMessage.getMessageType(),
                 timestamp.toString()).jsonString());
+        log.debug("success message:" + successMsg);
         channelHandlerContext.channel().writeAndFlush(successMsg).sync();
     }
 }
