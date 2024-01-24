@@ -33,6 +33,11 @@ public class ResponseBean {
         this.success = success;
         this.data = data;
         this.timestamp = (new Date()).getTime();
+        if (success) {
+            this.code = 200;
+        } else {
+            this.code = 500;
+        }
     }
 
     public ResponseBean(boolean success, ErrorCode errorCode, String errorMsg) {
