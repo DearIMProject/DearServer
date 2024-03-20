@@ -15,4 +15,6 @@ public class FileBean {
      */
     private String filePath;
     private String fileMd5;
+    private int width;
+    private int height;
 }

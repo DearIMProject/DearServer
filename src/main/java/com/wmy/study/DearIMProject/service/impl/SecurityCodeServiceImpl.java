@@ -9,6 +9,7 @@ import com.wmy.study.DearIMProject.domain.SecurityCode;
 import com.wmy.study.DearIMProject.domain.User;
 import com.wmy.study.DearIMProject.service.ISecurityCodeService;
 import com.wmy.study.DearIMProject.service.IUserService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,9 @@ import java.util.Date;
 @Service
 public class SecurityCodeServiceImpl extends ServiceImpl<ISecurityCodeDao, SecurityCode>
         implements ISecurityCodeService {
-    @Autowired
+    @Resource
     private ISecurityCodeDao codeDao;
-    @Autowired
+    @Resource
     private IUserService userService;
 
     @Override

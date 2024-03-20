@@ -66,16 +66,17 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         successMsg.setContent(String.valueOf(chatMessage.getTimestamp()));
         successMsg.setToId(chatMessage.getFromId());
         successMsg.setToEntity(MessageEntityType.USER);
-        successMsg.setContent(new SuccessContentJsonModel(chatMessage.getMsgId(),
-                chatMessage.getTimestamp(),
-                chatMessage.getMessageType(),
-                String.valueOf(chatMessage.getTimestamp())).jsonString());
+
         // 添加到数据库中
         if (!hasSendMsg) {
             messageService.saveOfflineMessage(chatMessage);
         } else {
             messageService.saveOnlineMessage(chatMessage);
         }
+        successMsg.setContent(new SuccessContentJsonModel(chatMessage.getMsgId(),
+                chatMessage.getTimestamp(),
+                chatMessage.getMessageType(),
+                String.valueOf(chatMessage.getTimestamp())).jsonString());
         successMsg.setMsgId(chatMessage.getMsgId());
         successMsg.setFromEntity(MessageEntityType.SERVER);
         successMsg.setFromId(0L);
