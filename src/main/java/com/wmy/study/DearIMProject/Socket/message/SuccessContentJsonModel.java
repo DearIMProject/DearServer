@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wmy.study.DearIMProject.Socket.MessageType;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class SuccessContentJsonModel {
     private Long msgId;
@@ -24,6 +26,11 @@ public class SuccessContentJsonModel {
         this.timestamp = timestamp;
         this.messageType = messageType;
         this.content = content;
+    }
+
+    public SuccessContentJsonModel fromJson(String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(json, SuccessContentJsonModel.class);
     }
 
     public String jsonString() throws JsonProcessingException {

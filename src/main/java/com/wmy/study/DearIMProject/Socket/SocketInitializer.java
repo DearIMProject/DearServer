@@ -31,6 +31,8 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
     @Resource
     private SingleChatHandler CHAT_HANDLER;
+//    @Resource
+//    private PictureChatHandler PICTURE_HANDLER;
 
     @Resource
     private OfflineMessageRequestHandler OFFLINE_HANDLER;
@@ -48,6 +50,7 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(OFFLINE_HANDLER);
         pipeline.addLast(READED_HANDLER);
         pipeline.addLast(CHAT_HANDLER);
+//        pipeline.addLast(PICTURE_HANDLER);
         pipeline.addLast(TRANSPARENT_HANDLER);
 
     }
