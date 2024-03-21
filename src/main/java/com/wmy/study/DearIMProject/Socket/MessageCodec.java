@@ -127,7 +127,7 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
         byte[] contentByte = new byte[length];
         in.readBytes(contentByte, 0, length);
         String content = new String(contentByte, StandardCharsets.UTF_8);
-        message.setContent(content.trim());
+        message.setContent(content);
         log.debug(message.toString());
         list.add(message);
     }
