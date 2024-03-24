@@ -30,9 +30,13 @@ mail:
     sender: wenmingyan1990@163.com
 
 application:
-  name: 展信佳
+  name: 即时聊天
   magicNumber: 891013
   tempFilePath: /Users/Apple/Developer/DearIM/IM/uploadFiles/
+  gitee:
+    accessToken: 73e03449df0adc53bebcdb1ed5c8c9ea
+    owner: mingyanwen
+    repo: cloudStorage
 
 mybatis-plus:
   global-config:

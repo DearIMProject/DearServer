@@ -32,6 +32,10 @@ public class MessageFactory {
             case READED_MESSAGE -> {
                 message = new ReadedMessage();
             }
+//            case PICTURE -> {
+//                message = new PictureMessage();
+//            }
+
         }
         assert message != null;
         message.setTimestamp(new Date().getTime());
