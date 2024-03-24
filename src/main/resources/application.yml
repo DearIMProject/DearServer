@@ -12,7 +12,7 @@ spring:
     username:
     password:
     driver-class-name: org.sqlite.JDBC
-    url: jdbc:sqlite:database.db
+    url: jdbc:sqlite:/Users/apple/Developer/DearIM/IM/DearData/database.db
   
   mail:
     host: smtp.163.com
