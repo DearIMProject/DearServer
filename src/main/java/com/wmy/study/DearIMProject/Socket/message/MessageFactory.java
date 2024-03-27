@@ -17,7 +17,7 @@ public class MessageFactory {
                 message.setFromEntity(MessageEntityType.SERVER);
                 message.setToEntity(MessageEntityType.USER);
             }
-            case TEXT, PICTURE, FILE, LINK, CHAT_MESSAGE -> {
+            case TEXT, FILE, LINK, CHAT_MESSAGE, PICTURE -> {
                 message = new ChatMessage();
             }
             case HEART_BEAT -> {
@@ -32,10 +32,9 @@ public class MessageFactory {
             case READED_MESSAGE -> {
                 message = new ReadedMessage();
             }
-//            case PICTURE -> {
-//                message = new PictureMessage();
-//            }
-
+            case DELETE_MESSAGE -> {
+                message = new DeleteMessage();
+            }
         }
         assert message != null;
         message.setTimestamp(new Date().getTime());

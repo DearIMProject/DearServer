@@ -236,4 +236,11 @@ public class UserController {
         }
         return new ResponseBean(false, null);
     }
+
+    @ResponseBody
+    @RequestMapping("/clearToken")
+    public ResponseBean clearToken() {
+        userTokenService.remove(null);
+        return new ResponseBean(true, null);
+    }
 }

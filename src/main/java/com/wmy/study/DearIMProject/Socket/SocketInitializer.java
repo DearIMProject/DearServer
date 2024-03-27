@@ -31,11 +31,10 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
     @Resource
     private SingleChatHandler CHAT_HANDLER;
-//    @Resource
-//    private PictureChatHandler PICTURE_HANDLER;
-
     @Resource
     private OfflineMessageRequestHandler OFFLINE_HANDLER;
+    @Resource
+    private DeleteMessageHandler DELETE_HANDLER;
     @Resource
     private TransparentMessageHandler TRANSPARENT_HANDLER;
 
@@ -49,8 +48,8 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(HEART_BEAT_HANDLER);
         pipeline.addLast(OFFLINE_HANDLER);
         pipeline.addLast(READED_HANDLER);
+        pipeline.addLast(DELETE_HANDLER);
         pipeline.addLast(CHAT_HANDLER);
-//        pipeline.addLast(PICTURE_HANDLER);
         pipeline.addLast(TRANSPARENT_HANDLER);
 
     }

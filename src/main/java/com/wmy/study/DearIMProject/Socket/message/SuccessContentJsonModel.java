@@ -12,8 +12,12 @@ import java.util.Map;
 public class SuccessContentJsonModel {
     private Long msgId;
     private Long timestamp;
+
     private MessageType messageType;
     private String content;
+
+    public SuccessContentJsonModel() {
+    }
 
     public SuccessContentJsonModel(Long msgId, Long timestamp, MessageType messageType) {
         this.msgId = msgId;
@@ -28,7 +32,7 @@ public class SuccessContentJsonModel {
         this.content = content;
     }
 
-    public SuccessContentJsonModel fromJson(String json) throws JsonProcessingException {
+    public static SuccessContentJsonModel fromJson(String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(json, SuccessContentJsonModel.class);
     }
@@ -37,4 +41,6 @@ public class SuccessContentJsonModel {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(this);
     }
+
+
 }

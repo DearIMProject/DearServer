@@ -82,7 +82,7 @@ public class UploadFileServiceImpl extends ServiceImpl<IFileDao, FileBean> imple
     }
 
     @Override
-    public FileBean uploadFileToBucket(MultipartFile file, User user, String fileType) throws IOException, NoSuchAlgorithmException, BusinessException {
+    public FileBean uploadFileToBucket(MultipartFile file, User user, String fileType) throws Exception {
         // 上传文件
         //TODO: wmy 文件去重逻辑 如果服务端已经有这个文件了，那么直接返回这个文件的地址，成功
         if (file.isEmpty()) {

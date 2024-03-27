@@ -28,4 +28,8 @@ public interface IMessageService extends IService<Message> {
      * @return
      */
     Message getMessageByTimestamp(Long timestamp);
+
+    boolean removeByTimestamp(Long timestamp);
+
+    boolean recallByTimestamp(Long timestamp);
 }

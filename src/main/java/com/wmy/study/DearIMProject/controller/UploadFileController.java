@@ -55,7 +55,7 @@ public class UploadFileController {
     }
 
     @PostMapping("/uploadBucket")
-    public ResponseBean uploadFileToBucket(@RequestParam("file") MultipartFile file, String token, String fileType) throws BusinessException, IOException, NoSuchAlgorithmException {
+    public ResponseBean uploadFileToBucket(@RequestParam("file") MultipartFile file, String token, String fileType) throws Exception {
         if (fileType == null || fileType.isEmpty()) {
             return new ResponseBean(false, ErrorCode.ERROR_CODE_FILE, "file.empty_file_type");
         }

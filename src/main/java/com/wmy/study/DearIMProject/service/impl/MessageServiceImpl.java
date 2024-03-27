@@ -62,4 +62,22 @@ public class MessageServiceImpl extends ServiceImpl<IMessageDao, Message> implem
         wrapper.eq("timestamp", timestamp);
         return getOne(wrapper);
     }
+
+    @Override
+    public boolean removeByTimestamp(Long timestamp) {
+        UpdateWrapper<Message> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("timestamp", timestamp);
+        updateWrapper.set("status", 3);
+        return update(updateWrapper);
+    }
+
+    @Override
+    public boolean recallByTimestamp(Long timestamp) {
+        UpdateWrapper<Message> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("timestamp", timestamp);
+        updateWrapper.set("status", 4);
+        return update(updateWrapper);
+    }
+
+
 }

@@ -2,11 +2,15 @@ package com.wmy.study.DearIMProject.Socket;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.IEnum;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonKey;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.Serializable;
 
+
 public enum MessageType implements IEnum<Integer> {
+
 
     TEXT(0, "文本"),
     PICTURE(1, "图片"),
@@ -18,8 +22,11 @@ public enum MessageType implements IEnum<Integer> {
     REQUEST_OFFLINE_MESSAGES(7, "请求离线消息"),
     READED_MESSAGE(8, "已读消息"),
     SEND_SUCCESS_MESSAGE(9, "发送成功"),
-    TRANSPARENT_MESSAGE(10, "透传消息");
+    TRANSPARENT_MESSAGE(10, "透传消息"),
+    DELETE_MESSAGE(11, "删除消息"),
+    RECALL_MESSAGE(12, "撤回消息");
 
+    @JsonCreator
     public static MessageType fromInt(int x) {
         return switch (x) {
             case 1 -> PICTURE;
@@ -32,11 +39,13 @@ public enum MessageType implements IEnum<Integer> {
             case 8 -> READED_MESSAGE;
             case 9 -> SEND_SUCCESS_MESSAGE;
             case 10 -> TRANSPARENT_MESSAGE;
+            case 11 -> DELETE_MESSAGE;
+            case 12 -> RECALL_MESSAGE;
             default -> TEXT;
         };
     }
 
-    @JsonValue
+
     @EnumValue
     private final Integer type;
     private final String desc;
@@ -46,6 +55,7 @@ public enum MessageType implements IEnum<Integer> {
         this.desc = desc;
     }
 
+    @JsonValue
     @Override
     public Integer getValue() {
         return this.type;

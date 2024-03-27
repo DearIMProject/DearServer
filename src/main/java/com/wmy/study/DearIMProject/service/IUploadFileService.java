@@ -21,5 +21,5 @@ public interface IUploadFileService extends IService<FileBean> {
      * @param fileType 文件类型
      * @return 文件链接
      */
-    FileBean uploadFileToBucket(MultipartFile file, User user, String fileType) throws IOException, NoSuchAlgorithmException, BusinessException;
+    FileBean uploadFileToBucket(MultipartFile file, User user, String fileType) throws Exception;
 }
