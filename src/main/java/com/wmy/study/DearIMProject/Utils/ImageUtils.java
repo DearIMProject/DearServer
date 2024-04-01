@@ -53,6 +53,13 @@ public class ImageUtils {
         }
         int width = jpegDirectory.getImageWidth();
         int height = jpegDirectory.getImageHeight();
+        if (orientation >= 4) {
+            int temp = width;
+            width = height;
+            height = temp;
+
+
+        }
 
         return new ImageInformation(orientation, width, height);
     }

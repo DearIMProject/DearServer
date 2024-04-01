@@ -132,10 +132,8 @@ public class UploadFileServiceImpl extends ServiceImpl<IFileDao, FileBean> imple
         sqlFileBean.setFileMd5(fileMd5);
         // 获取宽高
         List<Integer> list = FileUtils.imageWidth(file);
-        if (list != null) {
-            sqlFileBean.setWidth(list.get(0));
-            sqlFileBean.setHeight(list.get(1));
-        }
+        sqlFileBean.setWidth(list.get(0));
+        sqlFileBean.setHeight(list.get(1));
         save(sqlFileBean);
         return sqlFileBean;
 

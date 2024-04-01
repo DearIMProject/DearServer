@@ -54,22 +54,21 @@ public class FileUtils {
     /**
      * MultipartFile 转 File
      *
-     * @param file
+     * @param multipartFile
      * @throws Exception
      */
-    public static File multipartFileToFile(MultipartFile file) throws Exception {
-
-        File toFile = null;
-        if (file.equals("") || file.getSize() <= 0) {
-            file = null;
-        } else {
-            InputStream ins = null;
-            ins = file.getInputStream();
-            toFile = new File(file.getOriginalFilename());
-            inputStreamToFile(ins, toFile);
-            ins.close();
+    public static File multipartFileToFile(MultipartFile multipartFile) throws Exception {
+        assert (multipartFile != null);
+        assert (multipartFile.getOriginalFilename() != null);
+        File tempFile = File.createTempFile(multipartFile.getOriginalFilename(), null);
+        InputStream inputStream = multipartFile.getInputStream();
+        OutputStream outputStream = new FileOutputStream(tempFile);
+        int bytesRead;
+        byte[] buffer = new byte[8192];
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
         }
-        return toFile;
+        return tempFile;
     }
 
     //获取流文件
