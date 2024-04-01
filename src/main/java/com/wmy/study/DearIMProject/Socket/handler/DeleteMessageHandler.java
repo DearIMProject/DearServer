@@ -48,7 +48,7 @@ public class DeleteMessageHandler extends SimpleChannelInboundHandler<DeleteMess
             if (userTokens != null) {
                 for (UserToken userToken : userTokens) {
                     Channel channel = userTokenChannel.getChannel(userToken.getToken());
-                    if (!channel.equals(channelHandlerContext)) {
+                    if (channel != null && !channel.equals(channelHandlerContext)) {
                         channel.writeAndFlush(deleteMessage);
                     }
 

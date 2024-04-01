@@ -107,12 +107,11 @@ public class UploadFileServiceImpl extends ServiceImpl<IFileDao, FileBean> imple
         }
 
 //            String uri = "https://gitee.com/api/v5/repos/{owner}/{repo}/contents/{path}";
-        String filePath = user.getUserId() + "_" + fileType;
-        String uri = String.format("https://gitee.com/api/v5/repos/%s/%s/contents/%s", owner, repo, filePath + "/" + fileMd5);
+        String uri = String.format("https://gitee.com/api/v5/repos/%s/%s/contents/%s", owner, repo, fileType + "/" + fileMd5);
         log.info("uri = " + uri);
         Map<String, Object> requestMap = new HashMap<String, Object>();
         requestMap.put("content", FileUtils.encodeFileToBase64(file));
-        requestMap.put("message", "update file " + fileMd5 + " to " + filePath);
+        requestMap.put("message", "update file " + fileMd5 + " to " + fileType);
         requestMap.put("access_token", accessToken);
         ResponseEntity<GiteeUploadResponseBean> responseMap;
         try {

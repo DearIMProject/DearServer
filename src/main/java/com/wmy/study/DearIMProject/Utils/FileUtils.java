@@ -44,53 +44,12 @@ public class FileUtils {
     }
 
     public static List<Integer> imageWidth(MultipartFile file) throws Exception {
-        InputStream inputStream = file.getInputStream();
-        BufferedImage image = ImageIO.read(inputStream);
+        ImageUtils.ImageInformation imageInformation = ImageUtils.readImageInformation(multipartFileToFile(file));
+        assert imageInformation != null;
+        return List.of(imageInformation.width, imageInformation.height);
 
-        if (image != null) {
-            int width = image.getWidth();
-            int height = image.getHeight();
-            int rotateAngleForPhoto = getRotateAngleForPhoto(file);
-            return List.of(width, height);
-        } else {
-            return null;
-        }
     }
 
-    /**
-     * 图片翻转时，计算图片翻转到正常显示需旋转角度
-     */
-    public static int getRotateAngleForPhoto(MultipartFile files) throws Exception {
-
-
-        int angel = 0;
-        Metadata metadata;
-        File file = null;
-
-        file = multipartFileToFile(files);
-        metadata = JpegMetadataReader.readMetadata(file);
-        Directory directory = metadata.getFirstDirectoryOfType(ExifDirectoryBase.class);
-        if (directory != null && directory.containsTag(ExifDirectoryBase.TAG_ORIENTATION)) {
-            // Exif信息中方向　　
-            int orientation = directory.getInt(ExifDirectoryBase.TAG_ORIENTATION);
-            // 原图片的方向信息
-            if (6 == orientation) {
-                //6旋转90
-                angel = 90;
-            } else if (3 == orientation) {
-                //3旋转180
-                angel = 180;
-            } else if (8 == orientation) {
-                //8旋转90
-                angel = 270;
-            }
-        }
-        file.delete();
-
-
-        System.out.println("图片旋转角度：" + angel);
-        return angel;
-    }
 
     /**
      * MultipartFile 转 File
