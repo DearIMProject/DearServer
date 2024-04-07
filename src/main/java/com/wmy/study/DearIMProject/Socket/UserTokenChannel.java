@@ -59,7 +59,8 @@ public class UserTokenChannel {
     }
 
     public Channel getChannel(String token) {
-        return tokenChannelMap.get(token);
+        Channel channel = tokenChannelMap.get(token);
+        return channel;
     }
 
 }

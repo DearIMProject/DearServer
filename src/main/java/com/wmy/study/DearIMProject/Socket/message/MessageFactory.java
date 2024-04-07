@@ -35,8 +35,11 @@ public class MessageFactory {
             case DELETE_MESSAGE -> {
                 message = new DeleteMessage();
             }
+            case TRANSPARENT_MESSAGE -> {
+                message = new TransparentMessage();
+            }
+            default -> message = new Message();
         }
-        assert message != null;
         message.setTimestamp(new Date().getTime());
         message.setMessageType(messageType);
         message.setStatus(MessageStatus.STATUS_SUCCESS_READED);
