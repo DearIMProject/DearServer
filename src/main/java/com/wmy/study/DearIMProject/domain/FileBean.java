@@ -2,6 +2,7 @@ package com.wmy.study.DearIMProject.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,8 @@ import lombok.Data;
 @Data
 @TableName("tb_file")
 public class FileBean {
+    @TableLogic
+    private Boolean deleted;
     @TableId(value = "fileId", type = IdType.AUTO)
     private Long fileId;
     /**

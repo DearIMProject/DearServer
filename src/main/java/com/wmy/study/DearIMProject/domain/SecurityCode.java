@@ -2,6 +2,7 @@ package com.wmy.study.DearIMProject.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -18,6 +19,8 @@ public class SecurityCode {
      * 验证码
      */
     private String code;
+    @TableLogic
+    private Boolean deleted;
 
     private Long expireTime;
 }

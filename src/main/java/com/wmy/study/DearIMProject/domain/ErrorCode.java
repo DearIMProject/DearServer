@@ -25,19 +25,35 @@ public enum ErrorCode {
      */
     ERROR_CODE_USER_HAS_REGISTERED,
     ERROR_CODE_NOT_PREMISSION,
-    // 账本相关
-    /**
-     * 账本创建失败
-     */
-    ERROR_CODE_BOOK_CREATE_FAILURE,
-    /**
-     * 找不到账本
-     */
-    ERROR_CODE_BOOK_NOT_FOUND,
+
     /**
      * 找不到记录
      */
     ERROR_CODE_RECORD_NOT_FOUND,
 
     ERROR_CODE_FILE,
+    ERROR_CODE_EMPTY_PARAM,
+    ERROR_CODE_CREATE_FAILURE,
+    ERROR_CODE_NO_PERMISSION,
+    /**
+     * 添加失败
+     */
+    ERROR_CODE_ADD_FAILURE,
+    ERROR_CODE_DELETE_FAILURE,
+
+    //  --- 群组 ---
+    /**
+     * 群组找不到
+     */
+    ERROR_CODE_GROUP_NOT_EXIST,
+    /**
+     * 群组已存在
+     */
+    ERROR_CODE_GROUP_HAS_EXIST,
+    /**
+     * 群组已存在用户
+     */
+    ERROR_CODE_GROUP_HAS_EXIST_USER,
+
+
 }

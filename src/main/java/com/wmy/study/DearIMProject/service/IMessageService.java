@@ -1,7 +1,10 @@
 package com.wmy.study.DearIMProject.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.wmy.study.DearIMProject.Exception.BusinessException;
 import com.wmy.study.DearIMProject.Socket.Message;
+import com.wmy.study.DearIMProject.Socket.MessageType;
 
 import java.util.List;
 
@@ -32,4 +35,9 @@ public interface IMessageService extends IService<Message> {
     boolean removeByTimestamp(Long timestamp);
 
     boolean recallByTimestamp(Long timestamp);
+
+
+    void sendMessage(String fromUid, String toUid, String content, MessageType messageType) throws InterruptedException;
+
+    void sendReadedMessage(Long timestamp) throws BusinessException;
 }

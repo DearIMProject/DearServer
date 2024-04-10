@@ -34,6 +34,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns("user/sendCheckCode")
                 .excludePathPatterns("/user/checkCode")
                 .excludePathPatterns("/message/send")
+                .excludePathPatterns("/message/sendImage")
                 .excludePathPatterns("/message/offlineMessage");
 
 

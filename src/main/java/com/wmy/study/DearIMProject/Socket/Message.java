@@ -12,8 +12,10 @@ import com.wmy.study.DearIMProject.typeHandler.MessageEntityTypeHandler;
 import com.wmy.study.DearIMProject.typeHandler.MessageStatusTypeHandler;
 import com.wmy.study.DearIMProject.typeHandler.MessageTypeHandler;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @Data
 @TableName(value = "tb_message", autoResultMap = true)
 public class Message implements Cloneable {
@@ -57,4 +59,5 @@ public class Message implements Cloneable {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(this);
     }
+
 }

@@ -2,12 +2,15 @@ package com.wmy.study.DearIMProject.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wmy.study.DearIMProject.Exception.BusinessException;
 import com.wmy.study.DearIMProject.Socket.Message;
 import com.wmy.study.DearIMProject.Socket.MessageEntityType;
 import com.wmy.study.DearIMProject.Socket.MessageType;
 import com.wmy.study.DearIMProject.Socket.UserTokenChannel;
 import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
+import com.wmy.study.DearIMProject.domain.ErrorCode;
+import com.wmy.study.DearIMProject.domain.FileBean;
 import com.wmy.study.DearIMProject.domain.ResponseBean;
 import com.wmy.study.DearIMProject.domain.UserToken;
 import com.wmy.study.DearIMProject.service.IMessageService;
@@ -49,32 +52,7 @@ public class SendMsgController {
      */
     @PostMapping("/send")
     public ResponseBean sendMessage(String fromUid, String toUid, String content) throws InterruptedException {
-        Message message = getMessage(fromUid, toUid, content);
-        QueryWrapper<UserToken> wrapper = new QueryWrapper<>();
-        wrapper.eq("uid", toUid);
-        List<UserToken> list = tokenService.list(wrapper);
-
-
-        boolean hasFindChannel = false;
-        boolean hasSendMesssage = false;
-
-        for (UserToken userToken : list) {
-            String token = userToken.getToken();
-            Channel channel = userTokenChannel.getChannel(token);
-            if (channel != null) {
-                log.info("找到一个channel");
-                if (!hasSendMesssage) {
-                    messageService.saveOnlineMessage(message);
-                    hasSendMesssage = true;
-                }
-                channel.writeAndFlush(message).sync();
-                hasFindChannel = true;
-            }
-        }
-        if (!hasFindChannel) {
-            messageService.saveOfflineMessage(message);
-        }
-
+        messageService.sendMessage(fromUid, toUid, content, MessageType.TEXT);
         return new ResponseBean(true, null);
     }
 
@@ -86,44 +64,18 @@ public class SendMsgController {
         return new ResponseBean(true, map);
     }
 
-    @PostMapping("/sendReadedMessage")
-    public ResponseBean sendReadedMessage(Long timestamp) throws BusinessException {
-        Message message = messageService.getMessageByTimestamp(timestamp);
-        log.debug("message" + message);
-        messageService.setReaded(timestamp);
-        // 发送给用户告知已读状态
-        List<UserToken> userTokens = userService.getUserTokens(message.getFromId());
-        boolean isSend = false;
-        Message readMessage = MessageFactory.factoryWithMessageType(MessageType.READED_MESSAGE);
-        readMessage.setFromId(message.getFromId());
-        readMessage.setFromEntity(message.getFromEntity());
-        readMessage.setToEntity(message.getToEntity());
-        readMessage.setToId(message.getToId());
-        readMessage.setMsgId(message.getMsgId());
-        readMessage.setContent(timestamp.toString());
-        for (UserToken userToken : userTokens) {
-            Channel channel = userTokenChannel.getChannel(userToken.getToken());
-            if (channel != null) {
-                channel.writeAndFlush(readMessage);
-                isSend = true;
-            }
-        }
-        // 如果用户不在线，则放到消息库中
-        if (!isSend) {
-            readMessage.setMsgId(null);
-            messageService.save(readMessage);
-        }
+    @PostMapping("/sendImage")
+    public ResponseBean sendImage(String fromUid, String toUid, String imageUrl) throws JsonProcessingException, InterruptedException {
+        FileBean fileBean = new FileBean();
+        String content = fileBean.jsonString();
+        messageService.sendMessage(fromUid, toUid, content, MessageType.PICTURE);
         return new ResponseBean(true, null);
     }
 
-    private Message getMessage(String fromUid, String toUid, String content) {
-        Message message = MessageFactory.factoryWithMessageType(MessageType.TEXT);
-        message.setFromId(Long.parseLong(fromUid));
-        message.setFromEntity(MessageEntityType.USER);
-        message.setToId(Long.parseLong(toUid));
-        message.setToEntity(MessageEntityType.USER);
-        message.setContent(content);
-        message.setMsgId(null);
-        return message;
+    @PostMapping("/sendReadedMessage")
+    public ResponseBean sendReadedMessage(Long timestamp) throws BusinessException {
+        messageService.sendReadedMessage(timestamp);
+        return new ResponseBean(true, null);
     }
 }
+
