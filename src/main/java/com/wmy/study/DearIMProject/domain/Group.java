@@ -1,6 +1,7 @@
 package com.wmy.study.DearIMProject.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 @TableName("tb_group")
 public class Group {
     @TableLogic
+    @JsonIgnore
     private Boolean deleted;
     /**
      * 群组id
@@ -29,10 +31,12 @@ public class Group {
     @Getter(AccessLevel.NONE)
     private List<Long> contentUserIds;
 
+    @JsonIgnore
     private String userIds;
 
     private Long ownUserId;
 
+    @JsonIgnore
     private String mUserIds;
 
     @TableField(exist = false)
@@ -96,4 +100,6 @@ public class Group {
                 ", managerUserIds=" + managerUserIds +
                 '}';
     }
+
+    
 }

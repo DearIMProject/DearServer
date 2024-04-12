@@ -1,13 +1,16 @@
 package com.wmy.study.DearIMProject.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.drew.lang.annotations.NotNull;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wmy.study.DearIMProject.Exception.BusinessException;
 import com.wmy.study.DearIMProject.domain.ErrorCode;
 import com.wmy.study.DearIMProject.domain.Group;
 import com.wmy.study.DearIMProject.domain.ResponseBean;
+import com.wmy.study.DearIMProject.domain.User;
 import com.wmy.study.DearIMProject.service.IGroupMessageService;
 import com.wmy.study.DearIMProject.service.IGroupService;
+import com.wmy.study.DearIMProject.service.IUserService;
 import jakarta.annotation.Nullable;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,9 @@ public class GroupController {
 
     @Resource
     private IGroupMessageService groupMessageService;
+
+    @Resource
+    private IUserService userService;
 
 
     /**
@@ -59,18 +65,29 @@ public class GroupController {
         Map<String, Object> map = new HashMap<>();
 
         Group group = groupService.createGroup(aUserIds, token);
-        if (group != null) {
-            map.put("group", group);
-            try {
-                groupMessageService.sendAddGroupMessage(aUserIds, group.getGroupId());
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+
+        List<User> users = userService.listByIds(group.getContentUserIds());
+        map.put("group", group);
+        StringBuilder stringBuilder = new StringBuilder();
+        int index = 0;
+        for (User user : users) {
+            index++;
+            stringBuilder.append(user.getUsername());
+            if (index != users.size() - 1) {
+                stringBuilder.append(",");
             }
-            return new ResponseBean(true, map);
         }
 
+        map.put("names", stringBuilder.toString());
 
-        return new ResponseBean(false, ErrorCode.ERROR_CODE_CREATE_FAILURE, "error.create_failure");
+        try {
+            groupMessageService.sendAddGroupMessage(aUserIds, group.getGroupId());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return new ResponseBean(true, map);
+
+
     }
 
     /**

@@ -24,6 +24,7 @@ public class User {
     @TableField(exist = false)
     private long expireTime;
     @TableLogic
+    @JsonIgnore
     private Boolean deleted;
     private String username;
 

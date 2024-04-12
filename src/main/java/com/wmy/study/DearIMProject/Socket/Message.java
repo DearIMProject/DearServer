@@ -1,10 +1,8 @@
 package com.wmy.study.DearIMProject.Socket;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wmy.study.DearIMProject.Socket.message.SuccessContentJsonModel;
@@ -35,6 +33,9 @@ public class Message implements Cloneable {
     private Long timestamp;
     @TableField(typeHandler = MessageStatusTypeHandler.class)
     private MessageStatus status;
+    @TableLogic
+    @JsonIgnore
+    private boolean deleted;
 
     @Override
     public Message clone() {

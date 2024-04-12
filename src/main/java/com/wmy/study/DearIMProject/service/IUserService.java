@@ -47,6 +47,5 @@ public interface IUserService extends IService<User> {
     List<UserToken> getUserTokens(String email) throws BusinessException;
 
     List<UserToken> getUserTokens(Long userId) throws BusinessException;
-
-
+    
 }
