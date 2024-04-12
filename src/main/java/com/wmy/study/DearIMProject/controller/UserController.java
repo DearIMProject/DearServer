@@ -133,6 +133,9 @@ public class UserController {
         QueryWrapper<UserToken> tokenQueryWrapper = new QueryWrapper<>();
         tokenQueryWrapper.eq("token", token);
         UserToken one = userTokenService.getOne(tokenQueryWrapper);
+        if (one == null) {
+            return new ResponseBean(false, null);
+        }
         user.setExpireTime(one.getExpireTime());
 
         if (token != null) {

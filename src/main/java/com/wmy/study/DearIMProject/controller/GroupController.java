@@ -1,5 +1,6 @@
 package com.wmy.study.DearIMProject.controller;
 
+import com.drew.lang.annotations.NotNull;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wmy.study.DearIMProject.Exception.BusinessException;
 import com.wmy.study.DearIMProject.domain.ErrorCode;
@@ -7,12 +8,14 @@ import com.wmy.study.DearIMProject.domain.Group;
 import com.wmy.study.DearIMProject.domain.ResponseBean;
 import com.wmy.study.DearIMProject.service.IGroupMessageService;
 import com.wmy.study.DearIMProject.service.IGroupService;
+import jakarta.annotation.Nullable;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,19 +40,29 @@ public class GroupController {
      * @return 成功 or 失败
      */
     @PostMapping("/create")
-    public ResponseBean createGroup(List<Long> userIds, String token) throws BusinessException {
+    public ResponseBean createGroup(String userIds, String token) throws BusinessException {
+        String[] numberStrings = userIds.trim().split(",");
+
+        // 创建一个Long类型的数组
+        List<Long> longNumbers = new ArrayList<>();
+
+        // 将字符串数组转换为Long数组
+        for (String numberString : numberStrings) {
+            longNumbers.add(Long.parseLong(numberString));
+        }
+        List<Long> aUserIds = longNumbers;
         // 判断入参合法性
-        if (userIds == null || userIds.isEmpty()) {
+        if (aUserIds.isEmpty()) {
             return new ResponseBean(false, ErrorCode.ERROR_CODE_EMPTY_PARAM, "error.empty_param");
         }
 
         Map<String, Object> map = new HashMap<>();
 
-        Group group = groupService.createGroup(userIds, token);
+        Group group = groupService.createGroup(aUserIds, token);
         if (group != null) {
             map.put("group", group);
             try {
-                groupMessageService.sendAddGroupMessage(userIds, group.getGroupId());
+                groupMessageService.sendAddGroupMessage(aUserIds, group.getGroupId());
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -63,21 +76,22 @@ public class GroupController {
     /**
      * 添加用户到群组
      *
-     * @param groupId 群组id
-     * @param userIds 用户id数组
-     * @param token   用户token
+     * @param groupId  群组id
+     * @param aUserIds 用户id数组
+     * @param token    用户token
      * @return 成功 or 失败
      */
     @PostMapping("/addUsers")
-    public ResponseBean addUsersToGroup(Long groupId, List<Long> userIds, String token) throws BusinessException, JsonProcessingException {
+    public ResponseBean addUsersToGroup(Long groupId, List<Long> aUserIds, String token) throws BusinessException, JsonProcessingException {
         // 判断参数合法性
-        if (userIds == null || userIds.isEmpty()) {
+        if (aUserIds == null || aUserIds.isEmpty()) {
             return new ResponseBean(false, ErrorCode.ERROR_CODE_EMPTY_PARAM, "error.empty_param");
         }
-        boolean success = groupService.addUserToGroup(groupId, userIds, token);
+
+        boolean success = groupService.addUserToGroup(groupId, aUserIds, token);
         if (success) {
             try {
-                groupMessageService.sendAddGroupMessage(userIds, groupId);
+                groupMessageService.sendAddGroupMessage(aUserIds, groupId);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

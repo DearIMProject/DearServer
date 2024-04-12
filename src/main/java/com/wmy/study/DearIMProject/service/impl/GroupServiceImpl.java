@@ -51,16 +51,19 @@ public class GroupServiceImpl extends ServiceImpl<IGroupDao, Group> implements I
             throw new BusinessException(ErrorCode.ERROR_CODE_NO_PERMISSION, "error.no_permission");
         }
         User createUser = userService.getFromToken(token);
+        if (createUser == null) {
+            throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "error.user_not_found");
+        }
         List<Long> userIds = new ArrayList<>();
         for (User user : users) {
             userIds.add(user.getUserId());
 
         }
-
         Group group = new Group();
         group.setContentUserIds(userIds);
         group.setOwnUserId(createUser.getUserId());
-
+        group.setName("群聊");
+        group.setMUserIds(String.valueOf(createUser.getUserId()));
         boolean save = save(group);
         if (save) {
             log.debug("创建群组成功 group = {}", group);
@@ -79,15 +82,17 @@ public class GroupServiceImpl extends ServiceImpl<IGroupDao, Group> implements I
      * 判断用户是否有权限添加用户
      * 该函数通过给定的token获取用户信息，然后判断传入的userIds是否有重复，并通过查询数据库判断userIds中的用户是否存在。最后返回存在数据库中的用户列表。
      *
-     * @param userIds 添加的用户ids
-     * @param token   用户token
+     * @param aUserIds 添加的用户ids
+     * @param token    用户token
      * @return 用户的user列表
      */
-    private List<User> hasPermissionToAddUserIds(List<Long> userIds, String token) {
+    private List<User> hasPermissionToAddUserIds(List<Long> aUserIds, String token) {
         User user = userService.getFromToken(token);
         if (user == null) {
             return null;
         }
+        List<Long> userIds = new ArrayList<>(aUserIds);
+        userIds.add(user.getUserId());
         // 判断userId是否有重复
         HashSet<Long> hashSetUserIds = new HashSet<>(userIds);
         // 判断userId是否存在

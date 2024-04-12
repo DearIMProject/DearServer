@@ -27,7 +27,7 @@ public enum MessageType implements IEnum<Integer> {
     RECALL_MESSAGE(12, "撤回消息"),
     GROUP_ADD(13, "群组添加"),
     GROUP_UPDATE(14, "群组更新"),
-    GROUP_DELETE(14, "群组删除");
+    GROUP_DELETE(15, "群组删除");
 
     @JsonCreator
     public static MessageType fromInt(int x) {

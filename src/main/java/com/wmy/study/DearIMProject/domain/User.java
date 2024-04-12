@@ -1,6 +1,7 @@
 package com.wmy.study.DearIMProject.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class User {
     private Long userId;
 
     private String email;
+    @JsonIgnore
     private String password;
     /**
      * 账户状态 0: 未注册; 1: 已注册; 2: 已注销
@@ -53,22 +55,29 @@ public class User {
     /**
      * 用户的好用列表
      */
+    @JsonIgnore
     private String userIds;
     @TableField(exist = false)
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
+    @JsonIgnore
     private List<Long> contentUserIds;
     /**
      * 用户的群组列表
      */
+    @JsonIgnore
     private String groupIds;
     @TableField(exist = false)
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
+    @JsonIgnore
     private List<Long> contentGroupIds;
 
     public List<Long> getContentGroupIds() {
-        String[] numberStrings = groupIds.split(",");
+        if (groupIds.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        String[] numberStrings = groupIds.trim().split(",");
 
         // 创建一个Long类型的数组
         List<Long> longNumbers = new ArrayList<>();
@@ -82,14 +91,13 @@ public class User {
 
     public void setContentGroupIds(List<Long> contentGroupIds) {
         StringBuilder sb = new StringBuilder();
-        for (Long userId : contentUserIds) {
+        for (Long userId : contentGroupIds) {
             sb.append(userId).append(",");
         }
         this.groupIds = sb.toString();
     }
 
     public void setContentUserIds(List<Long> contentUserIds) {
-        this.contentUserIds = contentUserIds;
         StringBuilder sb = new StringBuilder();
         for (Long userId : contentUserIds) {
             sb.append(userId).append(",");
@@ -98,7 +106,10 @@ public class User {
     }
 
     public List<Long> getContentUserIds() {
-        String[] numberStrings = userIds.split(",");
+        if (userIds.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        String[] numberStrings = userIds.trim().split(",");
 
         // 创建一个Long类型的数组
         List<Long> longNumbers = new ArrayList<>();

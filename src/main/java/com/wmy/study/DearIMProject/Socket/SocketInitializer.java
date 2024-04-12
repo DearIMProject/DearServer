@@ -37,6 +37,8 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
     private DeleteMessageHandler DELETE_HANDLER;
     @Resource
     private TransparentMessageHandler TRANSPARENT_HANDLER;
+    @Resource
+    private ExceptionHandler EXCEPTION_HANDLER;
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
@@ -51,7 +53,7 @@ public class SocketInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(DELETE_HANDLER);
         pipeline.addLast(CHAT_HANDLER);
         pipeline.addLast(TRANSPARENT_HANDLER);
-
+        pipeline.addLast(EXCEPTION_HANDLER);
     }
 
     @Override
