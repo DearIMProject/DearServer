@@ -30,7 +30,7 @@ public class UserTokenChannel {
     public void addChannelToToken(String token, Channel channel) {
 
         Channel findChannel = tokenChannelMap.get(token);
-        if (findChannel != null) {
+        if (!channel.equals(findChannel) && findChannel != null) {
             findChannel.close();
         }
         tokenChannelMap.put(token, channel);

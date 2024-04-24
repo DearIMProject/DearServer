@@ -62,7 +62,7 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
                 log.debug("群聊消息没有群");
                 return;
             }
-            if (!group.hasPermissionToEdit(userId)) {
+            if (!group.getContentUserIds().contains(userId)) {
                 log.debug("没有权限发送该群信息");
                 return;
             }
@@ -100,7 +100,6 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
                 boolean isSend = false;
                 if (list.isEmpty()) {
                     log.debug("没有找到用户userToken");
-                    continue;
                 } else {
                     for (UserToken userToken : list) {
                         Channel channel = userTokenChannel.getChannel(userToken.getToken());
