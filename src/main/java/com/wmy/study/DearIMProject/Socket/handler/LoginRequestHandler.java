@@ -58,6 +58,8 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         message.setFromEntity(MessageEntityType.SERVER);
         message.setToId(0L);
         message.setToEntity(MessageEntityType.USER);
+        message.setEntityId(0L);
+        message.setEntityType(MessageEntityType.SERVER);
         if (userToken == null) {
             message.setContent("error: cannot found token!");
         } else {

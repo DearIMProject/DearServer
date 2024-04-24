@@ -1,6 +1,7 @@
 package com.wmy.study.DearIMProject.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -263,17 +264,12 @@ public class GroupServiceImpl extends ServiceImpl<IGroupDao, Group> implements I
         if (user == null) {
             throw new BusinessException(ErrorCode.ERROR_CODE_USER_NOT_FOUND, "error.user_has_not_exist");
         }
-
-        List<Group> groupList = list();
-        ArrayList<Group> result = new ArrayList<>();
-        for (Group group : groupList) {
-            if (group.getContentUserIds().contains(user.getUserId())) {
-                result.add(group);
-            }
-        }
-        return result;
-
-
+        // userIds 包含userId的群组
+        QueryWrapper<Group> wrapper = new QueryWrapper<>();
+        wrapper.like("user_ids", user.getUserId().toString() + ",").or().like("user_ids", "," + user.getUserId().toString());
+        List<Group> list = list(wrapper);
+        log.debug(list.toString());
+        return list;
     }
 
 

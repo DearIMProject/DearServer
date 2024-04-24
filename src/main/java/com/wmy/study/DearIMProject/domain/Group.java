@@ -85,7 +85,7 @@ public class Group {
     }
 
     public boolean hasPermissionToEdit(Long userId) {
-        return managerUserIds.contains(userId) || ownUserId.equals(userId);
+        return getManagerUserIds().contains(userId) || ownUserId.equals(userId);
     }
 
     @Override
@@ -101,5 +101,5 @@ public class Group {
                 '}';
     }
 
-    
+
 }

@@ -26,6 +26,8 @@ public class Message implements Cloneable {
     private Long toId;
     @TableField(typeHandler = MessageEntityTypeHandler.class)
     private MessageEntityType toEntity;
+    private MessageEntityType entityType; // 这条消息是群消息还是私聊消息
+    private Long entityId;// 消息对应的群id或userId
     /*消息内容*/
     private String content;
     @TableField(typeHandler = MessageTypeHandler.class)
@@ -36,6 +38,7 @@ public class Message implements Cloneable {
     @TableLogic
     @JsonIgnore
     private boolean deleted;
+
 
     @Override
     public Message clone() {

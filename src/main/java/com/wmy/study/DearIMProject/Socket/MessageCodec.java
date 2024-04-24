@@ -69,6 +69,9 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
         // 接收方
         out.writeLong(message.getToId());
         out.writeByte(message.getToEntity().ordinal());
+        // 实体信息
+        out.writeLong(message.getEntityId());
+        out.writeByte(message.getEntityType().ordinal());
         // status
         out.writeByte(message.getStatus().ordinal());
         // 获取内容字节数组
@@ -121,6 +124,11 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
         long toId = in.readLong();
         message.setToId(toId);
         message.setToEntity(MessageEntityType.fromInt((int) in.readByte()));
+        // 实体信息
+        long entityId = in.readLong();
+        message.setEntityId(entityId);
+        message.setEntityType(MessageEntityType.fromInt((int) in.readByte()));
+
         message.setStatus(MessageStatus.fromInt((int) in.readByte()));
         // 获取内容字节数组
         int length = in.readInt();
