@@ -38,21 +38,23 @@ public class ReadedMessageHandler extends SimpleChannelInboundHandler<ReadedMess
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ReadedMessage readedMessage) throws Exception {
         // 数据库添加已读状态
         String content = readedMessage.getContent();
-        Long timestamp = Long.valueOf(content);
-        Message message = messageService.getMessageByTimestamp(timestamp);
+        SuccessContentJsonModel jsonModel = SuccessContentJsonModel.fromJson(content);
+        Long timestamp = jsonModel.getTimestamp();
+        Long msgId = jsonModel.getMsgId();
+        Message message = messageService.getById(msgId);
         log.debug("message" + message);
-        messageService.setReaded(timestamp);
+        messageService.sendReadedMessage(message, readedMessage.getFromId());
         // 发送给用户告知已读状态， 已读消息直接透传给对方
-        List<UserToken> userTokens = userService.getUserTokens(message.getFromId());
+        List<UserToken> userTokens = userService.getUserTokens(readedMessage.getFromId());
         for (UserToken userToken : userTokens) {
             Channel channel = userTokenChannel.getChannel(userToken.getToken());
             if (channel != null) {
                 channel.writeAndFlush(readedMessage);
             }
         }
-        // 已读消息放到消息库中
-        readedMessage.setMsgId(null);
-        messageService.save(readedMessage);
+//        // 已读消息放到消息库中
+//        readedMessage.setMsgId(null);
+//        messageService.save(readedMessage);
 
         // 给已读放发送已读消息回执
         Message successMsg = MessageFactory.factoryWithMessageType(MessageType.SEND_SUCCESS_MESSAGE);
@@ -62,6 +64,8 @@ public class ReadedMessageHandler extends SimpleChannelInboundHandler<ReadedMess
         successMsg.setFromId(readedMessage.getToId());
         successMsg.setFromEntity(MessageEntityType.SERVER);
         successMsg.setMsgId(0L);
+        successMsg.setEntityId(readedMessage.getToId());
+        successMsg.setEntityType(MessageEntityType.USER);
         successMsg.setContent(new SuccessContentJsonModel(readedMessage.getMsgId(),
                 readedMessage.getTimestamp(),
                 readedMessage.getMessageType(),

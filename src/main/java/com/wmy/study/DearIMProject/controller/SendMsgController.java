@@ -1,25 +1,18 @@
 package com.wmy.study.DearIMProject.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wmy.study.DearIMProject.Exception.BusinessException;
 import com.wmy.study.DearIMProject.Socket.Message;
-import com.wmy.study.DearIMProject.Socket.MessageEntityType;
 import com.wmy.study.DearIMProject.Socket.MessageType;
 import com.wmy.study.DearIMProject.Socket.UserTokenChannel;
-import com.wmy.study.DearIMProject.Socket.message.MessageFactory;
-import com.wmy.study.DearIMProject.domain.ErrorCode;
 import com.wmy.study.DearIMProject.domain.FileBean;
 import com.wmy.study.DearIMProject.domain.ResponseBean;
-import com.wmy.study.DearIMProject.domain.UserToken;
 import com.wmy.study.DearIMProject.service.IMessageService;
 import com.wmy.study.DearIMProject.service.IUserService;
 import com.wmy.study.DearIMProject.service.IUserTokenService;
-import io.netty.channel.Channel;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,7 +51,7 @@ public class SendMsgController {
 
     @PostMapping("/offlineMessage")
     public ResponseBean getOfflineMessage(String token) {
-        List<Message> offlineMessages = messageService.getOfflineMessages(token, 0L);
+        List<Message> offlineMessages = messageService.getOfflinePersonalMessages(token, 0L);
         HashMap<String, Object> map = new HashMap<>();
         map.put("messages", offlineMessages);
         return new ResponseBean(true, map);
@@ -72,10 +65,10 @@ public class SendMsgController {
         return new ResponseBean(true, null);
     }
 
-    @PostMapping("/sendReadedMessage")
-    public ResponseBean sendReadedMessage(Long timestamp) throws BusinessException {
-        messageService.sendReadedMessage(timestamp);
-        return new ResponseBean(true, null);
-    }
+//    @PostMapping("/sendReadedMessage")
+//    public ResponseBean sendReadedMessage(Long timestamp, Long fromId) throws BusinessException, JsonProcessingException {
+//        messageService.sendReadedMessage(timestamp, fromId);
+//        return new ResponseBean(true, null);
+//    }
 }
 

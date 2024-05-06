@@ -42,8 +42,7 @@ public class MessageFactory {
         }
         message.setTimestamp(new Date().getTime());
         message.setMessageType(messageType);
-        message.setStatus(MessageStatus.STATUS_SUCCESS_READED);
+        message.setStatus(MessageStatus.STATUS_SUCCESS);
         return message;
     }
-
 }

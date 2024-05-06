@@ -9,8 +9,15 @@ import com.wmy.study.DearIMProject.Socket.message.SuccessContentJsonModel;
 import com.wmy.study.DearIMProject.typeHandler.MessageEntityTypeHandler;
 import com.wmy.study.DearIMProject.typeHandler.MessageStatusTypeHandler;
 import com.wmy.study.DearIMProject.typeHandler.MessageTypeHandler;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -26,8 +33,8 @@ public class Message implements Cloneable {
     private Long toId;
     @TableField(typeHandler = MessageEntityTypeHandler.class)
     private MessageEntityType toEntity;
-    private MessageEntityType entityType; // 这条消息是群消息还是私聊消息
     private Long entityId;// 消息对应的群id或userId
+    private MessageEntityType entityType; // 这条消息是群消息还是私聊消息
     /*消息内容*/
     private String content;
     @TableField(typeHandler = MessageTypeHandler.class)
@@ -38,6 +45,42 @@ public class Message implements Cloneable {
     @TableLogic
     @JsonIgnore
     private boolean deleted;
+
+    @TableField(exist = false)
+    @Setter(AccessLevel.NONE)
+    @JsonIgnore
+    private List<Long> readList;
+
+    @TableField(exist = false)
+    @Setter(AccessLevel.NONE)
+    @JsonIgnore
+    private String readUserIds;
+
+    public void setReadList(List<Long> readList) {
+        this.readList = readList;
+        String result = readList.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+        setReadUserIds(result);
+    }
+
+    public void setReadUserIds(String readUserIds) {
+        this.readUserIds = readUserIds;
+        String[] numberStrings = readUserIds.split(",");
+
+        // 创建一个Long类型的数组
+        List<Long> longNumbers = new ArrayList<>();
+
+
+        // 将字符串数组转换为Long数组
+        for (String numberString : numberStrings) {
+            if (numberString.length() != 0) {
+                longNumbers.add(Long.parseLong(numberString));
+            }
+
+        }
+        readList = longNumbers;
+    }
 
 
     @Override

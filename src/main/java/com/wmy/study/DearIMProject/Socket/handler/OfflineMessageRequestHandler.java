@@ -23,10 +23,15 @@ public class OfflineMessageRequestHandler extends SimpleChannelInboundHandler<Re
     protected void channelRead0(ChannelHandlerContext context, RequestOfflineMessage message) throws Exception {
         // 发送offline Message
         String token = message.getContent();
-        List<Message> messages = messageService.getOfflineMessages(token, message.getTimestamp());
+        List<Message> messages = messageService.getOfflinePersonalMessages(token, message.getTimestamp());
         for (Message offlineMessage : messages) {
             context.channel().writeAndFlush(offlineMessage).sync();
-            log.debug("message" + message);
+            log.debug("message" + offlineMessage);
+        }
+        List<Message> offlineGroupMessages = messageService.getOfflineGroupMessages(token, message.getTimestamp());
+        for (Message offlineMessage : offlineGroupMessages) {
+            context.channel().writeAndFlush(offlineMessage).sync();
+            log.debug("message" + offlineMessage);
         }
     }
 }

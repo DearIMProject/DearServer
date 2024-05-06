@@ -80,6 +80,15 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
         out.writeInt(bytes.length);
         // 写入消息内容
         out.writeBytes(bytes);
+        // 写入已读列表
+        if (message.getReadUserIds() != null) {
+            byte[] readBytes = message.getReadUserIds().getBytes();
+            out.writeInt(readBytes.length);
+            out.writeBytes(readBytes);
+        } else {
+            out.writeInt(0);
+        }
+
         ByteBuf buffer = channelHandlerContext.alloc().buffer();
         buffer.writeInt(out.readableBytes());
         buffer.writeBytes(out);
@@ -136,6 +145,15 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
         in.readBytes(contentByte, 0, length);
         String content = new String(contentByte, StandardCharsets.UTF_8);
         message.setContent(content);
+        // 获取已读列表
+        int readLength = in.readInt();
+        if (readLength > 0) {
+            byte[] readByte = new byte[readLength];
+            in.readBytes(readByte, 0, readLength);
+            String readUserIds = new String(readByte, StandardCharsets.UTF_8);
+            message.setReadUserIds(readUserIds);
+        }
+
         log.debug(message.toString());
         list.add(message);
     }

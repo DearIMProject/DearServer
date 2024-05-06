@@ -20,14 +20,15 @@ public enum MessageType implements IEnum<Integer> {
     REQUEST_LOGIN(5, "请求登录"),
     HEART_BEAT(6, "心跳"),
     REQUEST_OFFLINE_MESSAGES(7, "请求离线消息"),
-    READED_MESSAGE(8, "已读消息"),
+    READED_MESSAGE(8, "已读消息"),// 不再使用
     SEND_SUCCESS_MESSAGE(9, "发送成功"),
     TRANSPARENT_MESSAGE(10, "透传消息"),
     DELETE_MESSAGE(11, "删除消息"),
     RECALL_MESSAGE(12, "撤回消息"),
     GROUP_ADD(13, "群组添加"),
     GROUP_UPDATE(14, "群组更新"),
-    GROUP_DELETE(15, "群组删除");
+    GROUP_DELETE(15, "群组删除"),
+    AUDIO(16, "音频");
 
     @JsonCreator
     public static MessageType fromInt(int x) {
@@ -47,6 +48,7 @@ public enum MessageType implements IEnum<Integer> {
             case 13 -> GROUP_ADD;
             case 14 -> GROUP_UPDATE;
             case 15 -> GROUP_DELETE;
+            case 16 -> AUDIO;
             default -> TEXT;
         };
     }

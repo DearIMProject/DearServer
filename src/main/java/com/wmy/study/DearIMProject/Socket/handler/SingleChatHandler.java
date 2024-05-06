@@ -97,7 +97,6 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
                 cloned.setEntityType(MessageEntityType.GROUP);
                 cloned.setToId(contentUserId);
                 cloned.setToEntity(MessageEntityType.USER);
-                boolean isSend = false;
                 if (list.isEmpty()) {
                     log.debug("没有找到用户userToken");
                 } else {
@@ -106,33 +105,26 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
                         if (channel != null) {
                             log.debug("找到用户userToken 发送信息" + channel);
                             channel.writeAndFlush(cloned);
-                            isSend = true;
                         }
                     }
                 }
-                if (isSend) {
-                    messageService.saveOnlineMessage(cloned);
-                } else {
-                    messageService.saveOfflineMessage(cloned);
-                }
+                messageService.saveMessage(cloned);
             }
             return;
         }
         execUserMessage(channelHandlerContext, chatMessage);
     }
 
-    private void execUserMessage(ChannelHandlerContext channelHandlerContext, ChatMessage chatMessage) throws JsonProcessingException {
+    private void execUserMessage(ChannelHandlerContext channelHandlerContext, ChatMessage chatMessage) throws JsonProcessingException, InterruptedException {
         QueryWrapper<UserToken> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid", chatMessage.getToId());
         log.debug("发送给的uid:" + chatMessage.getToId());
         List<UserToken> list = userTokenService.list(queryWrapper);
-        boolean hasSendMsg = false;
         Channel findChannel = null;
         for (UserToken userToken : list) {
             String token = userToken.getToken();
             Channel channel = userTokenChannel.getChannel(token);
             if (channel != null) {
-                hasSendMsg = true;
                 log.debug("找到用户userToken 发送信息" + channel);
                 findChannel = channel;
                 if (!channelHandlerContext.channel().equals(findChannel)) {
@@ -151,11 +143,7 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         successMsg.setEntityId(chatMessage.getFromId());
         successMsg.setEntityType(MessageEntityType.USER);
         // 添加到数据库中
-        if (!hasSendMsg) {
-            messageService.saveOfflineMessage(chatMessage);
-        } else {
-            messageService.saveOnlineMessage(chatMessage);
-        }
+        messageService.saveMessage(chatMessage);
         successMsg.setContent(new SuccessContentJsonModel(chatMessage.getMsgId(),
                 chatMessage.getTimestamp(),
                 chatMessage.getMessageType(),
@@ -163,6 +151,6 @@ public class SingleChatHandler extends SimpleChannelInboundHandler<ChatMessage> 
         successMsg.setMsgId(chatMessage.getMsgId());
         successMsg.setFromEntity(MessageEntityType.SERVER);
         successMsg.setFromId(0L);
-        channelHandlerContext.writeAndFlush(successMsg);
+        channelHandlerContext.writeAndFlush(successMsg).sync();
     }
 }

@@ -10,19 +10,30 @@ import java.util.List;
 
 
 public interface IMessageService extends IService<Message> {
-    void saveOfflineMessage(Message message);
+    void saveMessage(Message message);
 
-    void saveOnlineMessage(Message message);
 
     /**
-     * 获取token下所有的离线消息
+     * 获取token下所有的个人聊天的离线消息
      *
      * @param token
      * @return
      */
-    List<Message> getOfflineMessages(String token, Long timestamp);
+    List<Message> getOfflinePersonalMessages(String token, Long timestamp);
 
-    void setReaded(Long timestamp);
+    /**
+     * 获取token下所有的群聊天消息
+     *
+     * @param token
+     * @param timestamp
+     * @return
+     */
+    List<Message> getOfflineGroupMessages(String token, Long timestamp);
+
+    void setMessageReaded(Long msgId, Long userId);
+
+    @Deprecated
+    void setReaded(Long timestamp, Long userId);
 
     /**
      * 获取
@@ -30,7 +41,7 @@ public interface IMessageService extends IService<Message> {
      * @param timestamp
      * @return
      */
-    Message getMessageByTimestamp(Long timestamp);
+    Message getMessageByTimestamp(Long timestamp, Long toId);
 
     boolean removeByTimestamp(Long timestamp);
 
@@ -39,5 +50,5 @@ public interface IMessageService extends IService<Message> {
 
     void sendMessage(String fromUid, String toUid, String content, MessageType messageType) throws InterruptedException;
 
-    void sendReadedMessage(Long timestamp) throws BusinessException;
+    void sendReadedMessage(Message message, Long fromId) throws BusinessException, JsonProcessingException;
 }

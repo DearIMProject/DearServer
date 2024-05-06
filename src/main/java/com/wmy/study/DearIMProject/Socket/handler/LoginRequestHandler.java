@@ -67,6 +67,6 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             Channel channel = channelHandlerContext.channel();
             tokenChannel.addChannelToToken(token, channel);
         }
-        channelHandlerContext.writeAndFlush(message);
+        channelHandlerContext.writeAndFlush(message).sync();
     }
 }
