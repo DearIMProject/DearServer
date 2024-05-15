@@ -74,7 +74,7 @@ public class Message implements Cloneable {
 
         // 将字符串数组转换为Long数组
         for (String numberString : numberStrings) {
-            if (numberString.length() != 0) {
+            if (!numberString.isEmpty()) {
                 longNumbers.add(Long.parseLong(numberString));
             }
 
